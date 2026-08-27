@@ -1,0 +1,1429 @@
+<!doctype html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0B0A1C">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<title>30 שנה: המבחן</title>
+<style>
+/* ==========================================================================
+   פונטים — עובדים אופליין מתוך תיקיית fonts/.
+   אם הקבצים חסרים, יש נפילה חיננית לפונטים עבריים של המערכת.
+   הרץ פעם אחת: bash fetch-fonts.sh   (דורש אינטרנט, פעם אחת בלבד)
+   ========================================================================== */
+@font-face{font-family:'Suez One';src:url('fonts/SuezOne-Regular.ttf') format('truetype'), url('fonts/SuezOne-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Heebo';src:url('fonts/Heebo-Light.ttf') format('truetype'), url('fonts/Heebo-Light.woff2') format('woff2');font-weight:300;font-style:normal;font-display:swap}
+@font-face{font-family:'Heebo';src:url('fonts/Heebo-Medium.ttf') format('truetype'), url('fonts/Heebo-Medium.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Heebo';src:url('fonts/Heebo-ExtraBold.ttf') format('truetype'), url('fonts/Heebo-ExtraBold.woff2') format('woff2');font-weight:800;font-style:normal;font-display:swap}
+@font-face{font-family:'Frank Ruhl Libre';src:url('fonts/FrankRuhlLibre-Regular.ttf') format('truetype'), url('fonts/FrankRuhlLibre-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Frank Ruhl Libre';src:url('fonts/FrankRuhlLibre-Bold.ttf') format('truetype'), url('fonts/FrankRuhlLibre-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+
+:root{
+  --ink:        #14122E;
+  --ink-deep:   #0B0A1C;
+  --paper:      #F4E9D8;
+  --paper-warm: #E8D5B7;
+  --magenta:    #FF2E7E;
+  --tangerine:  #FF8A1F;
+  --electric:   #00E5C7;
+  --gold:       #FFC93C;
+  --violet:     #7B4BFF;
+
+  --display: 'Suez One', 'Arial Hebrew', 'Narkisim', 'David', serif;
+  --body: 'Heebo', 'Arial Hebrew', system-ui, sans-serif;
+  --letter: 'Frank Ruhl Libre', 'Times New Roman', serif;
+  --ease: cubic-bezier(.16,1,.3,1);
+  --pad: clamp(14px, 2.2vw, 34px);
+}
+
+*,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;width:100%;height:100dvh;overflow:hidden;background:var(--ink-deep);overscroll-behavior:none}
+body{
+  font-family:var(--body);color:var(--paper);
+  touch-action:manipulation;-webkit-user-select:none;user-select:none;
+  font-size:clamp(15px,1.5vw,20px);
+  background:
+    radial-gradient(120% 90% at 85% -10%, rgba(123,75,255,.30), transparent 55%),
+    radial-gradient(100% 80% at 5% 110%, rgba(255,46,126,.22), transparent 60%),
+    var(--ink);
+}
+button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer;-webkit-user-select:none;user-select:none}
+img{display:block;max-width:100%}
+
+/* ---------- שכבות אווירה ---------- */
+.grain{position:fixed;inset:-40px;pointer-events:none;z-index:60;opacity:.06}
+.grain svg{width:100%;height:100%}
+.vignette{position:fixed;inset:0;pointer-events:none;z-index:55;
+  background:radial-gradient(120% 100% at 50% 45%, transparent 45%, rgba(0,0,0,.62) 100%)}
+.scan{position:fixed;inset:0;pointer-events:none;z-index:56;opacity:.16;
+  background:repeating-linear-gradient(to bottom, rgba(255,255,255,.055) 0 1px, transparent 1px 4px)}
+
+/* נורות אולפן רודפות בקצה העליון */
+.bulbs{position:fixed;top:0;right:0;left:0;height:10px;z-index:50;display:flex;gap:10px;padding:0 12px;pointer-events:none;opacity:.85}
+.bulbs i{flex:1;height:5px;border-radius:0 0 6px 6px;background:var(--gold);opacity:.18;
+  animation:chase 2.6s linear infinite;box-shadow:0 0 12px var(--gold)}
+@keyframes chase{0%,88%{opacity:.14}92%{opacity:1}100%{opacity:.14}}
+
+.onair{position:fixed;top:16px;left:16px;z-index:52;display:flex;align-items:center;gap:9px;
+  padding:7px 15px 8px;border:2px solid var(--magenta);border-radius:3px;
+  font-weight:800;letter-spacing:.06em;font-size:clamp(11px,1.15vw,15px);
+  color:var(--magenta);background:rgba(255,46,126,.08);
+  text-shadow:0 0 14px rgba(255,46,126,.7);box-shadow:0 0 26px rgba(255,46,126,.22), inset 0 0 18px rgba(255,46,126,.12)}
+.onair::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--magenta);
+  box-shadow:0 0 12px var(--magenta);animation:blink 1.8s steps(1,end) infinite}
+@keyframes blink{0%,60%{opacity:1}61%,100%{opacity:.15}}
+
+/* ---------- מסכים ---------- */
+#app{position:fixed;inset:0;z-index:10}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;padding:var(--pad);padding-top:calc(var(--pad) + 14px)}
+
+/* ---------- נייר ---------- */
+.paper{
+  position:relative;background:
+    radial-gradient(130% 90% at 18% 0%, #FFF7E9 0%, var(--paper) 48%, var(--paper-warm) 100%);
+  color:var(--ink);border-radius:2px;
+  box-shadow:0 34px 70px -24px rgba(0,0,0,.85), 0 2px 0 rgba(255,255,255,.35) inset,
+             0 0 90px rgba(160,120,70,.12) inset;
+}
+.paper::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;
+  background:repeating-linear-gradient(115deg, rgba(150,110,60,.05) 0 2px, transparent 2px 7px)}
+.tape{position:absolute;width:120px;height:34px;background:rgba(255,242,214,.42);
+  border-left:1px dashed rgba(255,255,255,.35);border-right:1px dashed rgba(255,255,255,.35);
+  box-shadow:0 3px 10px rgba(0,0,0,.35);backdrop-filter:blur(1px)}
+.tape.tr{top:-15px;right:26px;transform:rotate(6deg)}
+.tape.tl{top:-15px;left:26px;transform:rotate(-7deg)}
+.tape.br{bottom:-15px;right:52px;transform:rotate(-4deg)}
+.tape.bl{bottom:-15px;left:52px;transform:rotate(5deg)}
+
+/* ---------- מסך פתיחה ---------- */
+.intro{align-items:center;justify-content:center;text-align:center}
+.intro-card{padding:clamp(20px,3.4vh,44px) clamp(30px,6vw,90px);max-width:min(1000px,92vw);
+  transform:rotate(-1.2deg);animation:cardIn .8s var(--ease) both}
+.big30{direction:ltr;unicode-bidi:isolate;font-family:var(--display);font-size:clamp(7rem,26vh,16rem);line-height:.82;color:var(--ink);
+  letter-spacing:-.02em;margin:0;position:relative}
+.big30 span{display:inline-block;animation:pop .9s var(--ease) both}
+.big30 span:nth-child(2){animation-delay:.12s}
+.intro-sub{font-family:var(--display);font-size:clamp(1.2rem,3.4vh,2.3rem);margin:.35em 0 .1em;color:var(--ink)}
+.intro-meta{font-family:var(--letter);font-style:italic;font-size:clamp(.95rem,2.2vh,1.4rem);
+  color:#6B5B44;letter-spacing:.02em}
+.intro-rule{height:3px;width:min(420px,70%);margin:clamp(12px,2.2vh,22px) auto;
+  background:linear-gradient(to left, transparent, var(--magenta), var(--tangerine), transparent)}
+.kick-title{font-family:var(--display);color:var(--magenta);font-size:clamp(1rem,2.4vh,1.5rem);
+  letter-spacing:.16em;margin-bottom:.6em}
+
+/* ---------- כותרת עליונה של שאלה ---------- */
+.qhead{display:flex;align-items:center;gap:16px;flex:0 0 auto;min-height:44px}
+.act{font-weight:800;font-size:clamp(11px,1.2vw,15px);letter-spacing:.14em;color:var(--gold);
+  border:1px solid rgba(255,201,60,.4);padding:6px 12px;border-radius:2px;white-space:nowrap}
+.dots{display:flex;gap:7px;flex:1;justify-content:center;align-items:center}
+.dots i{position:relative;width:9px;height:9px;border-radius:50%;background:rgba(244,233,216,.22);transition:all .4s var(--ease)}
+.dots i::after{content:'';position:absolute;inset:-15px -3px}
+.dots i.done{background:rgba(244,233,216,.5)}
+.dots i.now{background:var(--electric);width:30px;border-radius:5px;box-shadow:0 0 16px var(--electric)}
+
+/* ---------- גוף השאלה ---------- */
+.qbody{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;position:relative;min-height:0;padding:0 clamp(10px,4vw,70px)}
+.qnum{direction:ltr;unicode-bidi:isolate;position:absolute;bottom:-6%;left:-2%;font-family:var(--display);
+  font-size:clamp(6rem,26vw,22rem);line-height:.7;color:var(--paper);opacity:.055;pointer-events:none;z-index:0}
+.qbody > *{position:relative;z-index:1}
+.qbody > .qnum{position:absolute;z-index:0}
+.kicker{font-weight:800;letter-spacing:.2em;font-size:clamp(12px,1.4vw,17px);color:var(--electric);
+  margin-bottom:clamp(10px,2vh,22px);animation:up .5s var(--ease) both}
+.qtitle{font-family:var(--display);font-size:clamp(1.9rem,5vw,4.3rem);line-height:1.16;margin:0;
+  color:var(--paper);text-wrap:balance;max-width:22ch}
+.qtitle .w{display:inline-block;animation:up .6s var(--ease) both}
+.qsub{margin-top:clamp(12px,2.4vh,26px);font-weight:300;font-size:clamp(1rem,1.9vw,1.5rem);
+  color:rgba(244,233,216,.66);max-width:40ch;animation:up .6s var(--ease) both;animation-delay:.35s}
+.hostnote{margin-top:clamp(10px,1.8vh,18px);font-family:var(--letter);font-style:italic;
+  color:var(--gold);font-size:clamp(.9rem,1.6vw,1.2rem);opacity:.9;
+  border-top:1px dashed rgba(255,201,60,.35);padding-top:10px;max-width:38ch}
+
+/* ---------- כפתורים ---------- */
+.footbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding-top:clamp(8px,1.6vh,18px)}
+.cta{min-height:74px;padding:0 clamp(28px,4.5vw,64px);border-radius:3px;
+  font-family:var(--display);font-size:clamp(1.15rem,2.5vw,2rem);color:#fff;
+  background:linear-gradient(160deg,var(--magenta),#D3125F);
+  box-shadow:0 12px 0 -2px #8E0A3F, 0 26px 44px -14px rgba(255,46,126,.6);
+  transform:translateY(0);transition:transform .12s ease, box-shadow .12s ease;
+  animation:up .6s var(--ease) both;animation-delay:.5s}
+.cta:active{transform:translateY(6px);box-shadow:0 6px 0 -2px #8E0A3F, 0 12px 26px -12px rgba(255,46,126,.6)}
+.cta.teal{background:linear-gradient(160deg,var(--electric),#00A891);color:#04201C;
+  box-shadow:0 12px 0 -2px #007A69, 0 26px 44px -14px rgba(0,229,199,.5)}
+.cta.teal:active{box-shadow:0 6px 0 -2px #007A69}
+.cta.gold{background:linear-gradient(160deg,var(--gold),#E09A00);color:#2A1C00;
+  box-shadow:0 12px 0 -2px #9E6C00, 0 26px 44px -14px rgba(255,201,60,.5)}
+.cta.gold:active{box-shadow:0 6px 0 -2px #9E6C00}
+.ghost{min-height:64px;min-width:64px;padding:0 22px;border:2px solid rgba(244,233,216,.28);
+  border-radius:3px;font-weight:500;font-size:clamp(.95rem,1.5vw,1.15rem);color:rgba(244,233,216,.8);
+  background:rgba(244,233,216,.04)}
+.ghost:active{background:rgba(244,233,216,.14)}
+.ghost.tiny{min-height:56px;padding:0 16px;font-size:.95rem}
+.arrow{position:fixed;top:50%;transform:translateY(-50%);width:72px;height:104px;z-index:30;
+  display:flex;align-items:center;justify-content:center;font-size:2.2rem;color:rgba(244,233,216,.3);
+  background:linear-gradient(to left, rgba(11,10,28,.5), transparent)}
+.arrow:active{color:var(--electric)}
+.arrow.prev{right:0}
+.arrow.next{left:0;background:linear-gradient(to right, rgba(11,10,28,.5), transparent)}
+
+/* ---------- חשיפה: כרטיסים כפולים ---------- */
+.reveal-title{width:100%;font-family:var(--display);font-size:clamp(1.2rem,2.9vw,2.3rem);color:var(--gold);
+  text-align:center;margin:0 0 clamp(10px,2vh,22px);animation:up .5s var(--ease) both}
+.cards{display:flex;gap:clamp(14px,2.6vw,38px);align-items:stretch;justify-content:center;
+  width:100%;max-width:1250px;margin:0 auto;min-height:0;flex:1}
+.card{flex:1 1 0;min-width:0;display:flex;flex-direction:column;padding:clamp(16px,3vh,34px) clamp(16px,2.4vw,34px);
+  opacity:0;transform:translateX(-70px) rotate(-3deg)}
+.card.in{animation:cardIn .7s var(--ease) forwards}
+.card.mom{transform:translateX(70px) rotate(3deg)}
+.card-who{font-family:var(--display);font-size:clamp(1.3rem,3vw,2.4rem);margin:0 0 .35em;
+  display:flex;align-items:center;gap:12px}
+.card-who::before{content:"";width:16px;height:16px;border-radius:50%;flex:0 0 auto}
+.card.dad .card-who{color:#C4590A}
+.card.dad .card-who::before{background:var(--tangerine);box-shadow:0 0 0 4px rgba(255,138,31,.25)}
+.card.mom .card-who{color:#B3125A}
+.card.mom .card-who::before{background:var(--magenta);box-shadow:0 0 0 4px rgba(255,46,126,.25)}
+.card-text{font-family:var(--letter);font-style:italic;font-size:clamp(1.05rem,2.1vw,1.75rem);
+  line-height:1.5;color:#241F16;overflow:auto;flex:1;display:flex;align-items:center}
+.card-text::before{content:"„";font-size:2em;line-height:0;color:rgba(36,31,22,.25);margin-left:.1em;align-self:flex-start;margin-top:.45em}
+.card.dad{transform-origin:bottom right}
+.card.mom{transform-origin:bottom left}
+.single-card{width:100%;max-width:min(1000px,92vw);margin:0 auto;padding:clamp(22px,4vh,48px) clamp(24px,4vw,60px);
+  text-align:center;opacity:0;animation:cardIn .7s var(--ease) .1s forwards}
+.single-card .card-text{display:block;text-align:center}
+.single-card .card-text::before{content:none}
+
+/* ---------- פולרואיד ---------- */
+.polaroid{background:#FCF7EE;padding:14px 14px 0;border-radius:2px;
+  box-shadow:0 34px 60px -22px rgba(0,0,0,.85);transform:rotate(-2deg);
+  display:flex;flex-direction:column;max-height:100%;opacity:0;animation:cardIn .8s var(--ease) forwards}
+.polaroid img{width:100%;height:auto;object-fit:cover;min-height:0;flex:1;background:#DED2BC}
+.polaroid .cap{font-family:var(--letter);font-style:italic;color:#3A3226;
+  font-size:clamp(1rem,1.9vw,1.5rem);padding:.6em .2em .75em;text-align:center;flex:0 0 auto}
+.photo-wrap{width:100%;flex:1;display:flex;align-items:center;justify-content:center;min-height:0;padding:6px 0}
+.photo-wrap .polaroid{max-width:min(78vw,900px)}
+.missing{width:100%;aspect-ratio:4/3;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;background:repeating-linear-gradient(45deg,#E4D8C2 0 14px,#DCCFB6 14px 28px);color:#6B5B44;
+  font-weight:500;text-align:center;padding:16px;font-size:clamp(.85rem,1.4vw,1.05rem)}
+
+/* ---------- טיימר ---------- */
+.timer-stage{width:100%;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(10px,2vh,24px);min-height:0}
+.timer-row{display:flex;align-items:center;justify-content:center;gap:clamp(18px,4vw,60px);width:100%;min-height:0;flex:1}
+.ring{position:relative;width:clamp(180px,30vh,320px);height:clamp(180px,30vh,320px);flex:0 0 auto;
+  border-radius:50%;box-shadow:0 0 70px -12px rgba(0,229,199,.55);transition:box-shadow .3s}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:14;stroke-linecap:round}
+.ring .bg{stroke:rgba(244,233,216,.13)}
+.ring .fg{stroke:var(--electric);transition:stroke .3s}
+.ring.warn .fg{stroke:var(--magenta)}
+.ring.warn{box-shadow:0 0 80px -8px rgba(255,46,126,.7)}
+.ring .num{direction:ltr;unicode-bidi:isolate;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-size:clamp(3.4rem,9vh,6.5rem);color:var(--paper)}
+.timer-label{font-family:var(--display);font-size:clamp(1.2rem,3vw,2.2rem);color:var(--gold);text-align:center}
+.ring-col{display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2vh,20px);flex:0 0 auto}
+.timer-photo{flex:1 1 auto;min-width:0;min-height:0;display:flex;justify-content:center;align-items:center}
+.timer-photo .polaroid{width:100%;max-height:100%;max-width:min(52vw,760px)}
+.shake{animation:shake .5s}
+.done-badge{font-family:var(--display);color:var(--magenta);font-size:clamp(1.6rem,4vw,3rem);
+  animation:pop .5s var(--ease) both;text-shadow:0 0 30px rgba(255,46,126,.6)}
+
+/* ---------- מכונת מזל ---------- */
+.slot-box{max-width:min(92vw,900px);margin:0 auto;padding:clamp(20px,4vh,44px) clamp(30px,6vw,80px);min-width:min(80vw,620px);
+  text-align:center;overflow:hidden;position:relative}
+.slot-box::before,.slot-box::after{content:"";position:absolute;right:0;left:0;height:34%;pointer-events:none;z-index:2}
+.slot-box::before{top:0;background:linear-gradient(to bottom,#FFF7E9,transparent)}
+.slot-box::after{bottom:0;background:linear-gradient(to top,var(--paper-warm),transparent)}
+.slot-val{font-family:var(--display);font-size:clamp(3rem,11vw,8rem);line-height:1.05;color:var(--ink);
+  display:block;position:relative;z-index:1}
+.slot-val.landed{color:#B3125A;animation:pop .6s var(--ease) both}
+.slot-cap{font-family:var(--letter);font-style:italic;color:#6B5B44;font-size:clamp(1rem,1.9vw,1.4rem);position:relative;z-index:3}
+
+/* ---------- הצבעה ---------- */
+.vote-stage{width:100%;flex:1;display:flex;flex-direction:column;min-height:0;gap:clamp(8px,1.6vh,18px)}
+.vote-prompt{font-family:var(--display);text-align:center;font-size:clamp(1.4rem,3.6vw,2.9rem);color:var(--paper)}
+.vote-hint{text-align:center;color:rgba(244,233,216,.55);font-weight:300;font-size:clamp(.9rem,1.5vw,1.15rem)}
+.vote-grid{flex:1;display:flex;gap:clamp(14px,2.6vw,34px);align-items:stretch;min-height:0}
+.vote-btn{flex:1;min-width:0;border-radius:4px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:8px;font-family:var(--display);font-size:clamp(1.6rem,4.6vw,3.6rem);
+  color:#fff;position:relative;overflow:hidden;transition:transform .12s ease;padding:10px}
+.vote-btn:active{transform:scale(.97)}
+.vote-btn.bump{animation:bump .35s var(--ease)}
+.vote-btn .tally{direction:ltr;unicode-bidi:isolate;font-family:var(--body);font-weight:800;font-size:clamp(1rem,2vw,1.5rem);
+  background:rgba(0,0,0,.28);padding:6px 18px;border-radius:99px;min-width:3.2em}
+.v0{background:linear-gradient(165deg,var(--tangerine),#C4590A);box-shadow:0 14px 0 -2px #8A3D06, 0 30px 50px -18px rgba(255,138,31,.6)}
+.v1{background:linear-gradient(165deg,var(--magenta),#B3125A);box-shadow:0 14px 0 -2px #79063B, 0 30px 50px -18px rgba(255,46,126,.6)}
+.v2{background:linear-gradient(165deg,var(--electric),#00A891);color:#04201C;box-shadow:0 14px 0 -2px #007A69, 0 30px 50px -18px rgba(0,229,199,.5)}
+.v3{background:linear-gradient(165deg,var(--gold),#E09A00);color:#2A1C00;box-shadow:0 14px 0 -2px #9E6C00, 0 30px 50px -18px rgba(255,201,60,.5)}
+.bars{flex:1;display:flex;flex-direction:column;justify-content:center;gap:clamp(12px,2.4vh,26px);padding:0 clamp(4px,2vw,30px)}
+.bar-row{display:flex;align-items:center;gap:16px}
+.bar-name{font-family:var(--display);font-size:clamp(1.1rem,2.4vw,1.9rem);width:6.2em;text-align:start;flex:0 0 auto}
+.bar-track{flex:1;height:clamp(38px,7vh,64px);background:rgba(244,233,216,.09);border-radius:3px;overflow:hidden}
+.bar-fill{direction:ltr;unicode-bidi:isolate;white-space:nowrap;height:100%;width:0;transition:width .9s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;
+  justify-content:flex-start;padding:0 14px;font-weight:800;font-size:clamp(1rem,2vw,1.5rem);color:#fff;border-radius:3px}
+.bar-fill.f0{background:linear-gradient(to left,var(--tangerine),#C4590A)}
+.bar-fill.f1{background:linear-gradient(to left,var(--magenta),#B3125A)}
+.bar-fill.f2{background:linear-gradient(to left,var(--electric),#00A891);color:#04201C}
+.bar-fill.f3{background:linear-gradient(to left,var(--gold),#E09A00);color:#2A1C00}
+
+/* ---------- לוח תוצאות ---------- */
+.board{width:100%;display:flex;gap:clamp(16px,3vw,44px);justify-content:center;align-items:stretch;flex:1;min-height:0}
+.board-col{flex:1;max-width:420px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;padding:clamp(16px,3vh,32px);border-radius:4px;border:2px solid rgba(244,233,216,.14);
+  background:rgba(244,233,216,.04);position:relative}
+.board-col.win{border-color:var(--gold);box-shadow:0 0 60px -18px var(--gold), inset 0 0 40px rgba(255,201,60,.08)}
+.crown{position:absolute;top:-30px;font-size:clamp(2rem,5vw,3.4rem);animation:pop .6s var(--ease) both;text-shadow:0 6px 14px rgba(0,0,0,.55)}
+.board-name{font-family:var(--display);font-size:clamp(1.4rem,3.4vw,2.6rem)}
+.board-col.dad .board-name{color:var(--tangerine)}
+.board-col.mom .board-name{color:var(--magenta)}
+.board-score{direction:ltr;unicode-bidi:isolate;font-family:var(--display);font-size:clamp(3.6rem,12vh,8rem);line-height:1}
+.board-cap{color:rgba(244,233,216,.55);font-weight:300;font-size:clamp(.9rem,1.5vw,1.1rem)}
+
+/* ---------- כספת (שאלה נעולה) ---------- */
+.safe{width:100%;max-width:min(920px,92vw);margin:0 auto;padding:clamp(18px,3vh,34px) clamp(20px,3.5vw,44px);
+  display:flex;flex-direction:column;gap:14px;animation:cardIn .7s var(--ease) both}
+.safe h4{font-family:var(--display);margin:0;color:var(--ink);font-size:clamp(1.05rem,2.1vw,1.5rem);text-align:center}
+.safe-row{display:flex;gap:14px;flex-wrap:wrap}
+.safe-field{flex:1;min-width:220px;display:flex;flex-direction:column;gap:6px}
+.safe-field label{font-weight:800;font-size:clamp(.85rem,1.4vw,1.05rem)}
+.safe-field.dad label{color:#C4590A}
+.safe-field.mom label{color:#B3125A}
+.safe-field input{font-family:var(--letter);font-style:italic;font-size:clamp(1rem,1.8vw,1.3rem);
+  padding:14px 16px;min-height:60px;border:2px solid rgba(36,31,22,.2);border-radius:3px;
+  background:rgba(255,255,255,.55);color:#241F16;-webkit-user-select:text;user-select:text}
+.safe-field input:focus{outline:none;border-color:var(--magenta);background:#fff}
+.lock-state{display:flex;align-items:center;justify-content:center;gap:14px;font-family:var(--display);
+  color:var(--ink);font-size:clamp(1.05rem,2.2vw,1.6rem)}
+.lock-ico{font-size:1.6em;display:inline-block}
+.lock-ico.open{animation:pop .6s var(--ease) both}
+.safe-btn{align-self:center;min-height:64px;padding:0 34px;border-radius:3px;background:var(--ink);
+  color:var(--paper);font-family:var(--display);font-size:clamp(1rem,2vw,1.4rem)}
+
+/* ---------- מסך סיום ---------- */
+.finale{align-items:stretch;gap:clamp(8px,1.6vh,18px)}
+.finale-head{font-family:var(--display);text-align:center;font-size:clamp(1.5rem,4.4vw,3.4rem);color:var(--gold);
+  text-shadow:0 0 40px rgba(255,201,60,.4);animation:up .6s var(--ease) both}
+.sync{max-width:min(1000px,92vw);margin:0 auto;width:100%}
+.sync-lab{display:flex;justify-content:space-between;font-weight:500;color:rgba(244,233,216,.7);margin-bottom:6px;font-size:clamp(.85rem,1.5vw,1.1rem)}
+.sync-track{height:clamp(26px,5vh,44px);background:rgba(244,233,216,.09);border-radius:3px;overflow:hidden}
+.sync-fill{height:100%;width:0;border-radius:3px;transition:width 2.6s var(--ease);
+  background:linear-gradient(to left,var(--tangerine),var(--gold),var(--magenta),var(--electric));
+  box-shadow:0 0 40px rgba(255,201,60,.5)}
+.gallery{flex:1;min-height:0;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+  gap:clamp(6px,1.4vw,20px);padding:clamp(4px,1.2vh,14px) 0;overflow:hidden}
+.gallery .polaroid{width:clamp(88px,11vw,152px);animation:cardIn .8s var(--ease) both;overflow:hidden}
+.gallery .polaroid .cap{font-size:clamp(.7rem,1.05vw,.95rem);padding:.45em .2em .55em}
+.gallery .polaroid img,.gallery .missing{aspect-ratio:1/1;object-fit:cover}
+.gallery .missing{font-size:clamp(.55rem,.8vw,.75rem);gap:4px;padding:8px;overflow:hidden;line-height:1.25}
+.gallery .missing span:last-child{display:none}
+.finale-sign{font-family:var(--display);text-align:center;font-size:clamp(1.4rem,4vw,3rem);color:var(--paper);
+  animation:pop .8s var(--ease) both;animation-delay:.6s}
+
+/* ---------- הבזק ומעברים ---------- */
+.flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:70}
+.flash.go{animation:flash .42s ease-out}
+#confetti{position:fixed;inset:0;z-index:65;pointer-events:none}
+.logo-hit{position:fixed;bottom:8px;right:10px;z-index:53;font-family:var(--display);
+  color:rgba(244,233,216,.2);font-size:12px;letter-spacing:.1em;padding:8px 10px}
+
+/* ---------- פאנל חזרות ---------- */
+.rehearse{position:fixed;top:66px;left:12px;z-index:80;background:rgba(11,10,28,.94);
+  border:2px solid var(--electric);border-radius:4px;padding:10px;max-width:230px;
+  box-shadow:0 20px 50px rgba(0,0,0,.6)}
+.rehearse h5{margin:0 0 8px;font-size:12px;letter-spacing:.12em;color:var(--electric);font-weight:800}
+.rehearse .grid{display:flex;flex-wrap:wrap;gap:5px}
+.rehearse button{min-width:36px;min-height:36px;border:1px solid rgba(0,229,199,.35);border-radius:3px;
+  color:var(--paper);font-size:12px;font-weight:500;background:rgba(0,229,199,.07)}
+.rehearse button.wide{width:100%;margin-top:5px}
+.rehearse button.on{background:var(--electric);color:#04201C;font-weight:800}
+.rehearse .fold{position:absolute;top:-2px;left:-2px}
+
+/* ---------- אנימציות ---------- */
+@keyframes cardIn{to{opacity:1;transform:translateX(0) rotate(0)}}
+@keyframes up{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pop{from{opacity:0;transform:scale(.7)}60%{transform:scale(1.06)}to{opacity:1;transform:scale(1)}}
+@keyframes bump{40%{transform:scale(1.05)}to{transform:scale(1)}}
+@keyframes flash{0%{opacity:0}18%{opacity:.92}100%{opacity:0}}
+@keyframes shake{10%,90%{transform:translateX(-3px)}20%,80%{transform:translateX(6px)}
+  30%,50%,70%{transform:translateX(-10px)}40%,60%{transform:translateX(10px)}}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-8px) rotate(1deg)}}
+
+/* רשת ביטחון — אחרי 2.2 שניות כל מה שנכנס באנימציה מוצג בוודאות */
+.settled .w,.settled .kicker,.settled .qsub,.settled .cta,.settled .reveal-title,
+.settled .polaroid,.settled .single-card,.settled .safe,.settled .finale-head,
+.settled .finale-sign,.settled .crown,.settled .intro-card,.settled .big30 span,
+.settled .board-col{opacity:1 !important}
+.settled .card{opacity:1 !important;transform:translateX(0) rotate(0) !important}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;
+    transition-duration:.12s !important}
+  .card,.polaroid,.single-card,.safe{opacity:1 !important;transform:none !important}
+}
+/* אייפד פורטרט — עדיין שמיש, אבל מבקש לנדסקייפ */
+.rotate-hint{position:fixed;inset:0;z-index:90;display:none;flex-direction:column;gap:26px;align-items:center;
+  justify-content:center;background:var(--ink-deep);text-align:center;font-family:var(--display);
+  font-size:clamp(1.2rem,3.6vw,2rem);padding:40px;color:var(--gold)}
+@media (orientation:portrait) and (min-width:700px){ .rotate-hint{display:flex} }
+.rotate-hint.off{display:none !important}
+</style>
+</head>
+<body>
+
+<div class="bulbs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="onair" aria-hidden="true">בשידור חי</div>
+
+<div id="app"></div>
+
+<canvas id="confetti" aria-hidden="true"></canvas>
+<div class="flash" id="flash" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true">
+  <svg xmlns="http://www.w3.org/2000/svg"><filter id="noiseF"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#noiseF)"/></svg>
+</div>
+<div class="logo-hit" id="logoHit">30</div>
+<div class="rotate-hint" id="rotateHint">סובבו את האייפד לרוחב ↻<button class="ghost" id="rotateSkip">להמשיך ככה</button></div>
+
+<script>
+/* ============================================================================
+   ★★★  אזור העריכה של שיר  ★★★
+   כל התוכן של הערב נמצא כאן ורק כאן. אפשר לשנות הכל בלי לגעת בשורת קוד אחת
+   מתחת להערה "סוף אזור העריכה".
+   ----------------------------------------------------------------------------
+   שדות אפשריים בכל שאלה:
+     id          מספר השאלה (1-15)
+     act         מערכה 1 | 2 | 3
+     kicker      תווית קטנה מעל השאלה
+     question    השאלה עצמה
+     subtitle    שורת הנחיה מתחת לשאלה
+     hostNote    הערה למנחה שמופיעה על המסך (אופציונלי)
+     revealType  'dual' | 'single' | 'photo' | 'vote' | 'countdown' | 'slot'
+     revealTitle כותרת שמופיעה מעל החשיפה
+     reveal      { dad: "...", mom: "...", text: "..." }
+     image       'assets/xxx.jpg'  או  null
+     imageCaption כיתוב בכתב יד מתחת לתמונה
+     timer       מספר שניות (או null)
+     timerRounds מערך שמות לסבבי טיימר, למשל ["חיים","עינת"]
+     votes       [ { prompt:"...", options:[{label,color}], seed:[0,0] } ]
+     scoreboard  true = מציג לוח תוצאות מצטבר בסוף סבבי ההצבעה
+     slot        { spins:["...","..."], answer:"..." }
+     locked      true = כרטיס נעול שממלאים בתחילת הערב ונפתח בקינוח
+     confetti    true = קונפטי בסוף השאלה
+   צבעי אופציות בהצבעה: 'dad' (טנג'רין) | 'mom' (מג'נטה) | 'teal' | 'gold'
+   ============================================================================ */
+
+const DAD = 'חיים';
+const MOM = 'עינת';
+
+const QUESTIONS = [
+
+/* ===================== מערכה 1 — ירושלים, ההתחלה ===================== */
+{
+  id: 1, act: 1,
+  kicker: 'איך הכל התחיל',
+  question: 'איפה בדיוק ראיתם אחד את השני בפעם הראשונה?',
+  subtitle: 'כל אחד עונה בנפרד. בלי להסתכל אחד על השני.',
+  hostNote: null,
+  revealType: 'dual',
+  revealTitle: 'שתי גרסאות. ירושלים אחת.',
+  reveal: {
+    dad: '[למלא: הגרסה של חיים מהראיון המוקדם]',
+    mom: '[למלא: הגרסה של עינת מהראיון המוקדם]'
+  },
+  image: null, timer: null, confetti: false
+},
+{
+  id: 2, act: 1,
+  kicker: 'הרושם הראשון',
+  question: 'מה הייתה המחשבה הראשונה שעברה לך בראש עליו? ועליה?',
+  subtitle: 'התשובה הכנה. לא היפה.',
+  revealType: 'dual',
+  revealTitle: 'ככה זה נשמע מבפנים',
+  reveal: {
+    dad: '[למלא: מה חיים חשב על עינת]',
+    mom: '[למלא: מה עינת חשבה על חיים]'
+  },
+  image: 'assets/young-couple.jpg',
+  imageCaption: 'לפני הכל',
+  timer: null, confetti: false
+},
+{
+  id: 3, act: 1,
+  kicker: 'מי התחיל',
+  question: 'מי עשה את הצעד הראשון?',
+  subtitle: 'קודם המשפחה מצביעה. אחר כך שומעים את שתי הגרסאות.',
+  hostNote: 'שימו לב שהוא כבר מתחיל להתגונן.',
+  revealType: 'vote',
+  votes: [
+    { prompt: 'מי עשה את הצעד הראשון?', options: [{label: DAD, color:'dad'}, {label: MOM, color:'mom'}], seed: [0,0] }
+  ],
+  revealTitle: 'ועכשיו — מה הם עצמם אמרו',
+  reveal: {
+    dad: '[למלא: הגרסה של חיים]',
+    mom: '[למלא: הגרסה של עינת]'
+  },
+  image: null, timer: null, confetti: false
+},
+{
+  id: 4, act: 1,
+  kicker: 'הזמן עף',
+  question: 'כמה חודשים עברו מהפגישה הראשונה ועד ההצעה?',
+  subtitle: 'כל אחד אומר מספר בקול רם. עכשיו. לפני שמפעילים את המכונה.',
+  revealType: 'slot',
+  slot: {
+    spins: ['3 חודשים','7 חודשים','11 חודשים','שנה וחצי','חודשיים','9 חודשים','שנתיים'],
+    answer: '[למלא] חודשים'
+  },
+  revealTitle: 'התשובה הרשמית',
+  reveal: { text: '[למלא: סיפור קצר של מי צדק, ומי הגזים]' },
+  image: null, timer: null, confetti: false
+},
+{
+  id: 5, act: 1,
+  kicker: 'מבחן הזיכרון',
+  question: 'תמונת החתונה. 45 שניות לזהות כמה שיותר אנשים ברקע.',
+  subtitle: 'המשפחה סופרת בקול. חיים ועינת נגד השעון.',
+  revealType: 'countdown',
+  timer: 45,
+  image: 'assets/wedding-crowd.jpg',
+  imageCaption: 'ירושלים, 1996',
+  revealTitle: 'סוף הזמן',
+  reveal: { text: '[למלא: מי זוהה, מי נשכח, ומי ייעלב מזה עד פסח]' },
+  confetti: true
+},
+
+/* ============ מערכה 2 — כמה אתם באמת מכירים אחד את השני ============ */
+{
+  id: 6, act: 2,
+  kicker: 'הכרטיס הנעול',
+  question: 'בלי להסתכל בתפריט: מה בן/בת הזוג יזמין הערב?',
+  subtitle: 'כל אחד לוחש לשיר. הכרטיס ננעל עד הקינוח.',
+  hostNote: 'להקליד עכשיו, בתחילת הערב. לפתוח רק כשמגיע הקינוח.',
+  revealType: 'dual',
+  locked: true,
+  revealTitle: 'הכספת נפתחת',
+  reveal: { dad: '', mom: '' },
+  image: null, timer: null, confetti: false
+},
+{
+  id: 7, act: 2,
+  kicker: 'סבב מהיר',
+  question: 'מי יותר?',
+  subtitle: 'חמישה סבבים. כל המשפחה מצביעה. בלי רחמים.',
+  revealType: 'vote',
+  scoreboard: true,
+  votes: [
+    { prompt: 'מי יותר מאחר?',  options: [{label: DAD, color:'dad'}, {label: MOM, color:'mom'}], seed: [0,0] },
+    { prompt: 'מי יותר עקשן?',  options: [{label: DAD, color:'dad'}, {label: MOM, color:'mom'}], seed: [0,0] },
+    { prompt: 'מי יותר נוחר?',  options: [{label: DAD, color:'dad'}, {label: MOM, color:'mom'}], seed: [0,0] },
+    { prompt: 'מי יותר מבזבז?', options: [{label: DAD, color:'dad'}, {label: MOM, color:'mom'}], seed: [0,0] },
+    { prompt: 'מי תמיד צודק?',  options: [{label: DAD, color:'dad'}, {label: MOM, color:'mom'}], seed: [0,0] }
+  ],
+  image: 'assets/gymnastics.jpg',
+  imageCaption: 'המאמן, בשיא',
+  timer: null, confetti: false
+},
+{
+  id: 8, act: 2,
+  kicker: 'רשימת התלונות',
+  question: '15 שניות למנות את מה שהכי מעצבן אצל השני. מוכנים?',
+  subtitle: 'המשפחה סופרת. מי שאמר יותר — מפסיד. ככה זה עובד.',
+  revealType: 'countdown',
+  timer: 15,
+  timerRounds: [DAD, MOM],
+  revealTitle: 'ומי בעצם ניצח כאן',
+  reveal: { text: 'מי שהצליח להגיד יותר דברים — פשוט חשב עליהם יותר זמן. שניכם הפסדתם. תתחבקו.' },
+  image: null, confetti: false
+},
+{
+  id: 9, act: 2,
+  kicker: 'פסקול',
+  question: 'איזה שיר מזכיר לך אותו? ואותה?',
+  subtitle: 'שיר מנגן את זה מהטלפון ברגע החשיפה.',
+  revealType: 'dual',
+  revealTitle: 'הפסקול של 30 שנה',
+  reveal: {
+    dad: '[למלא: השיר של חיים]',
+    mom: '[למלא: השיר של עינת]'
+  },
+  image: null, timer: null, confetti: false
+},
+{
+  id: 10, act: 2,
+  kicker: 'תורשה',
+  question: 'איזה ילד דומה יותר לכל אחד מכם — שיר או אור?',
+  subtitle: 'קודם אתם עונים בקול. אחר כך נראה מה המשפחה חושבת באמת.',
+  hostNote: 'אור, נדב ושיר כבר הצביעו מראש. בלי לספר להם.',
+  revealType: 'vote',
+  votes: [
+    { prompt: 'מי דומה יותר לחיים?', options: [{label:'שיר', color:'teal'}, {label:'אור', color:'gold'}], seed: [2,1] },
+    { prompt: 'מי דומה יותר לעינת?', options: [{label:'שיר', color:'teal'}, {label:'אור', color:'gold'}], seed: [1,2] }
+  ],
+  revealTitle: 'הפסיקה של בית הדין המשפחתי',
+  reveal: { text: '[למלא: מה שתגיד כאן אחרי שתראה את הגרף]' },
+  image: 'assets/family-now.jpg',
+  imageCaption: 'הראיות',
+  timer: null, confetti: true
+},
+
+/* ===================== מערכה 3 — שלושים שנה, והלאה ===================== */
+{
+  id: 11, act: 3,
+  kicker: 'הרגע האחד',
+  question: 'הרגע הכי גדול של 30 השנים האלה. אחד. תבחרו.',
+  subtitle: 'זה החלק שבו מותר להתרגש.',
+  revealType: 'dual',
+  revealTitle: 'הרגע שכל אחד בחר',
+  reveal: {
+    dad: '[למלא: הרגע של חיים]',
+    mom: '[למלא: הרגע של עינת]'
+  },
+  image: null, timer: null, confetti: false
+},
+{
+  id: 12, act: 3,
+  kicker: 'לפרוטוקול',
+  question: 'מה הריב הכי מטופש שהיה לכם אי פעם?',
+  subtitle: 'ואם אתם לא מסכימים על מה בדיוק היה הריב — מושלם.',
+  revealType: 'dual',
+  revealTitle: 'שני תיקים. אותו מקרה.',
+  reveal: {
+    dad: '[למלא: הגרסה של חיים]',
+    mom: '[למלא: הגרסה של עינת]'
+  },
+  image: null, timer: null, confetti: false
+},
+{
+  id: 13, act: 3,
+  kicker: 'ארכיון',
+  question: 'התמונה הזאת — מתי צולמה, ואיפה?',
+  subtitle: '20 שניות. שנה מדויקת ומקום מדויק.',
+  revealType: 'photo',
+  timer: 20,
+  image: 'assets/mystery-photo.jpg',
+  imageCaption: 'מתי? איפה? מי צילם?',
+  revealTitle: 'התשובה',
+  reveal: { text: '[למלא: שנה, מקום, ומה קרה שם באמת]' },
+  confetti: false
+},
+{
+  id: 14, act: 3,
+  kicker: 'שאלת מיליון הדולר',
+  question: 'מי יגור על הים בראשון לציון, ומי בשקט של בוכמן?',
+  subtitle: 'הדירה החדשה נמצאת במודיעין. החלום נמצא במקום אחר.',
+  revealType: 'single',
+  revealTitle: 'המרחק המדויק בין החלום לבין החוזה',
+  reveal: {
+    text: 'חיים רצה גלים, חול, וג׳יפ רנגלר לבן חונה מול הים בראשון לציון. עינת רצתה שקט, הליכה בשבת אחר הצהריים, וספר. המרחק בין השניים הוא בערך 45 דקות נסיעה — ובדיוק 30 שנה של פשרות. השנה, בוכמן ניצחה. הים מחכה בסבלנות. הוא תמיד מחכה.'
+  },
+  image: null, timer: null, confetti: false
+},
+{
+  id: 15, act: 3,
+  kicker: 'ההצבעה האחרונה',
+  question: 'האם ייכנס ויז׳לה חדש לדירה בבוכמן?',
+  subtitle: 'כל המשפחה מצביעה. ההחלטה מחייבת. פחות או יותר.',
+  hostNote: 'רוקי מסתכל עלינו מלמעלה. תצביעו בהתאם.',
+  revealType: 'vote',
+  votes: [
+    { prompt: 'ויז׳לה חדש בבוכמן — כן או לא?',
+      options: [{label:'כן', color:'teal'}, {label:'בשום אופן לא', color:'mom'}], seed: [0,0] }
+  ],
+  revealTitle: 'הפסיקה',
+  reveal: { text: '[למלא: מה שהוחלט בפועל — או "נדבר על זה אחרי המעבר"]' },
+  image: 'assets/rocky.jpg',
+  imageCaption: 'רוקי. אין תחליף. אבל אפשר לנסות.',
+  timer: null, confetti: true
+}
+
+];
+
+/* מסך פתיחה ומסך סיום — טקסטים */
+const INTRO = {
+  kicker: 'הערב, בשידור חי מהשולחן',
+  big: '30',
+  title: 'שנה: המבחן',
+  years: '1996–2026',
+  meta: 'חיים ועינת · ירושלים ← מודיעין',
+  button: 'מתחילים'
+};
+
+const FINALE = {
+  head: 'לוח התוצאות של 30 שנה',
+  syncLabel: 'מד הסנכרון הזוגי',
+  sign: '30 שנה. אין מה להוסיף.',
+  note: 'ובכל זאת — יש לנו עוד שאלות לשנה הבאה.'
+};
+
+/* =========================== סוף אזור העריכה =========================== */
+
+/* ============================ תשתית ואפקטים ============================ */
+const app = document.getElementById('app');
+const KEY = 'thirty-years-test-v1';
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const params = new URLSearchParams(location.search);
+const REHEARSE = params.get('rehearse') === '1';
+
+const state = {
+  screen: 'intro',   // intro | question | finale
+  qi: 0,
+  stage: 0,
+  votes: {},         // "3_0" -> [n,n]
+  closed: {},        // "3_0" -> true
+  history: {},       // "3_0" -> [optionIndex,...]
+  inputs: {},        // "6_dad" -> "מרק כתום"
+  locked: {},        // "6" -> true
+  unlocked: {},      // "6" -> true
+  seen: {}           // "5" -> true (השאלות שכבר עברנו)
+};
+
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY); if(!raw) return;
+    const d = JSON.parse(raw);
+    Object.keys(state).forEach(k=>{ if(d[k] !== undefined) state[k] = d[k]; });
+  }catch(e){}
+}
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+/* ----- הבזק ----- */
+const flashEl = document.getElementById('flash');
+function flash(){
+  if(REDUCED) return;
+  flashEl.classList.remove('go'); void flashEl.offsetWidth; flashEl.classList.add('go');
+}
+
+/* ----- צליל (WebAudio, בלי קבצים) ----- */
+let actx = null;
+function tone(freq, dur, type){
+  try{
+    if(!actx) actx = new (window.AudioContext||window.webkitAudioContext)();
+    if(actx.state === 'suspended') actx.resume();
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type = type || 'triangle'; o.frequency.value = freq;
+    g.gain.setValueAtTime(.0001, actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.28, actx.currentTime + .02);
+    g.gain.exponentialRampToValueAtTime(.0001, actx.currentTime + dur);
+    o.connect(g); g.connect(actx.destination);
+    o.start(); o.stop(actx.currentTime + dur + .05);
+  }catch(e){}
+}
+function taDa(){ tone(523,.16); setTimeout(()=>tone(659,.16),120); setTimeout(()=>tone(880,.5),240); }
+function buzz(){ tone(180,.5,'sawtooth'); }
+function tick(){ tone(1200,.05,'square'); }
+
+/* ----- קונפטי ----- */
+const cvs = document.getElementById('confetti'), cx = cvs.getContext('2d');
+let bits = [], rafId = null, endless = false;
+const CCOLORS = ['#FFC93C','#FF2E7E','#FF8A1F','#00E5C7','#F4E9D8','#7B4BFF'];
+function sizeCanvas(){
+  const dpr = Math.min(devicePixelRatio||1, 2);
+  cvs.width = innerWidth*dpr; cvs.height = innerHeight*dpr;
+  cx.setTransform(dpr,0,0,dpr,0,0);
+}
+sizeCanvas(); addEventListener('resize', sizeCanvas);
+function spawn(n){
+  for(let i=0;i<n;i++){
+    bits.push({
+      x: Math.random()*innerWidth,
+      y: -20 - Math.random()*innerHeight*0.45,
+      w: 6+Math.random()*10, h: 8+Math.random()*14,
+      vx: (Math.random()-.5)*2.6, vy: 2.4+Math.random()*4.2,
+      rot: Math.random()*Math.PI, vr: (Math.random()-.5)*.32,
+      c: CCOLORS[(Math.random()*CCOLORS.length)|0]
+    });
+  }
+}
+function confettiLoop(){
+  cx.clearRect(0,0,innerWidth,innerHeight);
+  if(endless && bits.length < 220) spawn(3);
+  for(let i=bits.length-1;i>=0;i--){
+    const b = bits[i];
+    b.x += b.vx; b.y += b.vy; b.vy += 0.035; b.rot += b.vr;
+    cx.save(); cx.translate(b.x,b.y); cx.rotate(b.rot); cx.fillStyle = b.c;
+    cx.fillRect(-b.w/2,-b.h/2,b.w,b.h); cx.restore();
+    if(b.y > innerHeight+40) bits.splice(i,1);
+  }
+  if(bits.length || endless) rafId = requestAnimationFrame(confettiLoop);
+  else { rafId = null; cx.clearRect(0,0,innerWidth,innerHeight); }
+}
+function confetti(amount, forever){
+  endless = !!forever;
+  spawn(REDUCED ? Math.min(amount,40) : amount);
+  if(!rafId) rafId = requestAnimationFrame(confettiLoop);
+}
+function stopConfetti(){ endless = false; }
+
+/* ----- Wake Lock ----- */
+let wakeLock = null;
+async function keepAwake(){
+  try{
+    if('wakeLock' in navigator){ wakeLock = await navigator.wakeLock.request('screen'); }
+  }catch(e){ /* לא נתמך — ממשיכים בשקט */ }
+}
+document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState === 'visible') keepAwake(); });
+
+/* ============================ מנוע השלבים ============================ */
+function q(){ return QUESTIONS[state.qi]; }
+
+function buildStages(qu){
+  const s = [{type:'ask'}];
+  const r = qu.reveal || {};
+  const imgInTimer = !!(qu.timer && qu.image);
+  if(qu.timer){ (qu.timerRounds || [null]).forEach((label,i)=> s.push({type:'countdown', round:i, label})); }
+  if(qu.votes && qu.votes.length){
+    qu.votes.forEach((v,i)=> s.push({type:'vote', round:i}));
+    if(qu.scoreboard) s.push({type:'scoreboard'});
+  }
+  if(qu.revealType === 'slot' && qu.slot) s.push({type:'slot'});
+  if(qu.locked) s.push({type:'unlock'});
+  if(qu.locked || r.dad || r.mom) s.push({type:'dual'});
+  if(r.text) s.push({type:'single'});
+  if(qu.image && !imgInTimer) s.push({type:'photo'});
+  return s;
+}
+
+const CTA_LABEL = {
+  countdown: 'להתחיל לספור',
+  vote: 'לפתוח את ההצבעה',
+  scoreboard: 'ללוח התוצאות',
+  slot: 'לסובב את הגלגל',
+  unlock: 'לפתוח את הכספת',
+  dual: 'לחשוף את האמת',
+  single: 'לחשוף את האמת',
+  photo: 'להראות את ההוכחה'
+};
+
+function voteKey(qid, round){ return qid + '_' + round; }
+function getVotes(qu, round){
+  const k = voteKey(qu.id, round);
+  if(!state.votes[k]) state.votes[k] = (qu.votes[round].seed || []).slice();
+  const need = qu.votes[round].options.length;
+  while(state.votes[k].length < need) state.votes[k].push(0);
+  return state.votes[k];
+}
+
+/* ניקוד מצטבר: כל סבב הצבעה שבו מתמודדים חיים מול עינת */
+function tallyWins(list){
+  let dad = 0, mom = 0;
+  list.forEach(qu=>{
+    (qu.votes||[]).forEach((v,i)=>{
+      const di = v.options.findIndex(o=>o.label === DAD);
+      const mi = v.options.findIndex(o=>o.label === MOM);
+      if(di < 0 || mi < 0) return;
+      if(!state.closed[voteKey(qu.id,i)]) return;
+      const c = getVotes(qu,i);
+      if(c[di] > c[mi]) dad++; else if(c[mi] > c[di]) mom++;
+    });
+  });
+  return {dad, mom};
+}
+
+/* ============================ רכיבי HTML ============================ */
+function polaroidHTML(src, cap, style){
+  return '<div class="polaroid"' + (style ? ' style="'+style+'"' : '') + '>' +
+    '<img src="' + esc(src) + '" alt="" data-file="' + esc(src) + '">' +
+    (cap ? '<div class="cap">' + esc(cap) + '</div>' : '<div class="cap">&nbsp;</div>') +
+    '</div>';
+}
+function wireImages(root){
+  root.querySelectorAll('img[data-file]').forEach(img=>{
+    const fail = ()=>{
+      if(!img.parentNode) return;
+      const d = document.createElement('div');
+      d.className = 'missing';
+      d.innerHTML = '<b>כאן תיכנס התמונה</b><span>' + esc(img.getAttribute('data-file')) + '</span>' +
+                    '<span>שימו את הקובץ בתיקיית assets</span>';
+      img.replaceWith(d);
+    };
+    img.addEventListener('error', fail);
+    if(img.complete && img.naturalWidth === 0) fail();
+  });
+}
+function splitWords(text){
+  return String(text).split(' ').map((w,i)=>
+    '<span class="w" style="animation-delay:' + (0.06*i + 0.05).toFixed(2) + 's">' + esc(w) + '</span>'
+  ).join(' ');
+}
+function dotsHTML(){
+  return QUESTIONS.map((qu,i)=>
+    '<i data-jump="' + i + '" class="' + (i === state.qi ? 'now' : (state.seen[qu.id] ? 'done' : '')) + '"></i>'
+  ).join('');
+}
+
+/* ============================ מסך פתיחה ============================ */
+function renderIntro(){
+  app.innerHTML =
+  '<div class="screen intro">' +
+    '<div class="paper intro-card">' +
+      '<div class="tape tr"></div><div class="tape tl"></div>' +
+      '<div class="kick-title">' + esc(INTRO.kicker) + '</div>' +
+      '<h1 class="big30"><span>3</span><span>0</span></h1>' +
+      '<div class="intro-sub">' + esc(INTRO.title) + '</div>' +
+      '<div class="intro-rule"></div>' +
+      '<div class="intro-meta"><span dir="ltr">' + esc(INTRO.years) + '</span> · ' + esc(INTRO.meta) + '</div>' +
+    '</div>' +
+    '<div style="height:clamp(18px,4vh,44px)"></div>' +
+    '<button class="cta" id="mainBtn">' + esc(INTRO.button) + '</button>' +
+  '</div>' +
+  '<div class="intro-photo">' + polaroidHTML('assets/wedding-portrait.jpg', 'ירושלים, 1996') + '</div>';
+
+  wireImages(app);
+  document.getElementById('mainBtn').addEventListener('click', ()=>{
+    taDa(); flash();
+    state.screen = 'question'; state.qi = 0; state.stage = 0; save(); render();
+  });
+}
+
+/* ============================ מסך שאלה ============================ */
+function renderQuestion(){
+  const qu = q();
+  const stages = buildStages(qu);
+  if(state.stage >= stages.length) state.stage = stages.length - 1;
+  if(state.stage < 0) state.stage = 0;
+  const st = stages[state.stage];
+  state.seen[qu.id] = true;
+
+  const nextSt = stages[state.stage + 1];
+  const isLastQ = state.qi === QUESTIONS.length - 1;
+  let ctaLabel = nextSt ? (CTA_LABEL[nextSt.type] || 'הלאה')
+                        : (isLastQ ? 'למסך הסיום' : 'לשאלה הבאה');
+  let ctaClass = 'cta';
+  if(st.type === 'vote' && !state.closed[voteKey(qu.id, st.round)]){
+    ctaLabel = 'לסגור את ההצבעה'; ctaClass = 'cta teal';
+  } else if(!nextSt){ ctaClass = 'cta gold'; }
+
+  app.innerHTML =
+  '<div class="screen">' +
+    '<div class="qhead">' +
+      '<div class="act">מערכה ' + ['','א׳','ב׳','ג׳'][qu.act] + '</div>' +
+      '<div class="act" dir="ltr" style="opacity:.5">' + QUESTIONS.length + ' / ' + qu.id + '</div>' +
+      '<div class="dots">' + dotsHTML() + '</div>' +
+      '<div style="width:clamp(96px,11vw,150px);flex:0 0 auto"></div>' +
+    '</div>' +
+    '<div class="qbody" id="qbody">' +
+      '<div class="qnum">' + qu.id + '</div>' +
+      stageHTML(qu, st, stages) +
+    '</div>' +
+    '<div class="footbar">' +
+      '<button class="ghost tiny" id="prevBtn">→ אחורה</button>' +
+      '<button class="' + ctaClass + '" id="mainBtn">' + esc(ctaLabel) + '</button>' +
+      '<button class="ghost tiny" id="skipBtn">קדימה ←</button>' +
+    '</div>' +
+  '</div>';
+
+  wireImages(app);
+  document.getElementById('prevBtn').addEventListener('click', prev);
+  document.getElementById('skipBtn').addEventListener('click', next);
+  document.getElementById('mainBtn').addEventListener('click', ()=>{
+    if(st.type === 'vote' && !state.closed[voteKey(qu.id, st.round)]){ closeVote(qu, st.round); return; }
+    next();
+  });
+  app.querySelectorAll('[data-jump]').forEach(d=>{
+    d.addEventListener('click', ()=>{ state.qi = +d.dataset.jump; state.stage = 0; save(); render(); });
+  });
+
+  afterStage(qu, st, stages);
+}
+
+/* ---------- תוכן לפי סוג שלב ---------- */
+function stageHTML(qu, st, stages){
+  switch(st.type){
+    case 'ask':       return askHTML(qu);
+    case 'countdown': return countdownHTML(qu, st);
+    case 'vote':      return voteHTML(qu, st);
+    case 'scoreboard':return scoreboardHTML(qu);
+    case 'slot':      return slotHTML(qu);
+    case 'unlock':    return unlockHTML(qu);
+    case 'dual':      return dualHTML(qu);
+    case 'single':    return singleHTML(qu);
+    case 'photo':     return photoHTML(qu);
+  }
+  return '';
+}
+
+function askHTML(qu){
+  return (qu.kicker ? '<div class="kicker">' + esc(qu.kicker) + '</div>' : '') +
+    '<h2 class="qtitle">' + splitWords(qu.question) + '</h2>' +
+    (qu.subtitle ? '<p class="qsub">' + esc(qu.subtitle) + '</p>' : '') +
+    (qu.hostNote ? '<div class="hostnote">' + esc(qu.hostNote) + '</div>' : '') +
+    (qu.locked ? safeHTML(qu) : '');
+}
+
+function safeHTML(qu){
+  const isLocked = !!state.locked[qu.id];
+  if(isLocked){
+    return '<div class="paper safe" style="margin-top:clamp(14px,2.6vh,26px)">' +
+      '<div class="tape tr"></div>' +
+      '<div class="lock-state"><span class="lock-ico">🔒</span> הכרטיס נעול עד הקינוח</div>' +
+      '<button class="safe-btn" id="reopenSafe">לפתוח שוב לעריכה</button></div>';
+  }
+  return '<div class="paper safe" style="margin-top:clamp(14px,2.6vh,26px)">' +
+    '<div class="tape tr"></div><div class="tape tl"></div>' +
+    '<h4>שיר מקליד. אף אחד אחר לא מסתכל.</h4>' +
+    '<div class="safe-row">' +
+      '<div class="safe-field dad"><label>חיים ניחש שעינת תזמין…</label>' +
+        '<input id="in_dad" type="text" value="' + esc(state.inputs[qu.id+'_dad']||'') + '" placeholder="למשל: סלט יווני ועוד משהו"></div>' +
+      '<div class="safe-field mom"><label>עינת ניחשה שחיים יזמין…</label>' +
+        '<input id="in_mom" type="text" value="' + esc(state.inputs[qu.id+'_mom']||'') + '" placeholder="למשל: אנטריקוט. תמיד אנטריקוט."></div>' +
+    '</div>' +
+    '<button class="safe-btn" id="lockSafe">🔒 לנעול עד הקינוח</button></div>';
+}
+
+function countdownHTML(qu, st){
+  const label = st.label ? ('התור של ' + st.label) : (qu.timerRounds ? '' : 'על הזמן');
+  return '<div class="timer-stage">' +
+    (label ? '<div class="timer-label">' + esc(label) + '</div>' : '') +
+    '<div class="timer-row">' +
+      (qu.image ? '<div class="timer-photo">' + polaroidHTML(qu.image, qu.imageCaption) + '</div>' : '') +
+      '<div class="ring-col">' +
+        '<div class="ring" id="ring">' +
+          '<svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"></circle>' +
+          '<circle class="fg" id="ringFg" cx="60" cy="60" r="52"></circle></svg>' +
+          '<div class="num" id="ringNum">' + qu.timer + '</div>' +
+        '</div>' +
+        '<button class="ghost" id="startTimer" style="min-width:180px">להתחיל</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function voteHTML(qu, st){
+  const v = qu.votes[st.round];
+  const counts = getVotes(qu, st.round);
+  const closed = !!state.closed[voteKey(qu.id, st.round)];
+  const total = counts.reduce((a,b)=>a+b,0);
+  const colorIdx = { dad:0, mom:1, teal:2, gold:3 };
+
+  if(!closed){
+    return '<div class="vote-stage">' +
+      '<div class="vote-prompt">' + esc(v.prompt) + '</div>' +
+      '<div class="vote-hint">כל אחד לוחץ בתורו. אפשר לבטל קול אחרון.</div>' +
+      '<div class="vote-grid">' +
+        v.options.map((o,i)=>
+          '<button class="vote-btn v' + (colorIdx[o.color]!==undefined?colorIdx[o.color]:i) + '" data-vote="' + i + '">' +
+            esc(o.label) + '<span class="tally">' + counts[i] + '</span></button>'
+        ).join('') +
+      '</div>' +
+      '<div style="display:flex;gap:12px;justify-content:center">' +
+        '<button class="ghost tiny" id="undoVote">לבטל קול אחרון</button>' +
+        '<button class="ghost tiny" id="clearVote">לאפס את הסבב</button>' +
+      '</div>' +
+    '</div>';
+  }
+  const max = Math.max(1, ...counts);
+  return '<div class="vote-stage">' +
+    '<div class="vote-prompt">' + esc(v.prompt) + '</div>' +
+    '<div class="bars">' +
+      v.options.map((o,i)=>{
+        const pct = total ? Math.round(counts[i]/total*100) : 0;
+        const w = Math.max(8, Math.round(counts[i]/max*100));
+        return '<div class="bar-row"><div class="bar-name">' + esc(o.label) + '</div>' +
+          '<div class="bar-track"><div class="bar-fill f' + (colorIdx[o.color]!==undefined?colorIdx[o.color]:i) + '" data-w="' + w + '">' +
+          counts[i] + (total ? ' · ' + pct + '%' : '') + '</div></div></div>';
+      }).join('') +
+    '</div>' +
+    '<div style="text-align:center"><button class="ghost tiny" id="reopenVote">לפתוח מחדש את ההצבעה</button></div>' +
+  '</div>';
+}
+
+function scoreboardHTML(qu){
+  const t = tallyWins([qu]);
+  return '<div class="reveal-title">לוח התוצאות של הסבב</div>' +
+    '<div class="board">' +
+      '<div class="board-col dad' + (t.dad>t.mom?' win':'') + '">' + (t.dad>t.mom?'<div class="crown">👑</div>':'') +
+        '<div class="board-name">' + esc(DAD) + '</div><div class="board-score">' + t.dad + '</div>' +
+        '<div class="board-cap">קטגוריות</div></div>' +
+      '<div class="board-col mom' + (t.mom>t.dad?' win':'') + '">' + (t.mom>t.dad?'<div class="crown">👑</div>':'') +
+        '<div class="board-name">' + esc(MOM) + '</div><div class="board-score">' + t.mom + '</div>' +
+        '<div class="board-cap">קטגוריות</div></div>' +
+    '</div>';
+}
+
+function slotHTML(qu){
+  return '<div class="reveal-title">אמרתם את המספר שלכם? יופי.</div>' +
+    '<div class="paper slot-box">' +
+      '<div class="tape tr"></div><div class="tape tl"></div>' +
+      '<span class="slot-val" id="slotVal">?</span>' +
+      '<div class="slot-cap" id="slotCap">לחצו למטה כדי לסובב</div>' +
+    '</div>';
+}
+
+function unlockHTML(qu){
+  return '<div class="reveal-title">' + esc(qu.revealTitle || 'הכספת נפתחת') + '</div>' +
+    '<div class="paper safe" style="align-items:center">' +
+      '<div class="tape tr"></div><div class="tape tl"></div>' +
+      '<div class="lock-state"><span class="lock-ico open" id="lockIco">🔒</span> <span id="lockTxt">נעול מאז תחילת הערב</span></div>' +
+      '<button class="safe-btn" id="doUnlock">לפתוח</button>' +
+    '</div>';
+}
+
+function dualHTML(qu){
+  let dad = qu.reveal.dad, mom = qu.reveal.mom;
+  let labDad = (qu.cardLabels && qu.cardLabels.dad) || DAD;
+  let labMom = (qu.cardLabels && qu.cardLabels.mom) || MOM;
+  if(qu.locked){
+    dad = state.inputs[qu.id+'_dad'] || '(לא הוקלד כלום. נו, שיר.)';
+    mom = state.inputs[qu.id+'_mom'] || '(לא הוקלד כלום. נו, שיר.)';
+    labDad = 'הניחוש של ' + DAD; labMom = 'הניחוש של ' + MOM;
+  }
+  return (qu.revealTitle ? '<div class="reveal-title">' + esc(qu.revealTitle) + '</div>' : '') +
+    '<div class="cards">' +
+      '<div class="paper card dad" data-delay="0"><div class="tape tr"></div>' +
+        '<div class="card-who">' + esc(labDad) + '</div>' +
+        '<div class="card-text">' + esc(dad) + '</div></div>' +
+      '<div class="paper card mom" data-delay="800"><div class="tape tl"></div>' +
+        '<div class="card-who">' + esc(labMom) + '</div>' +
+        '<div class="card-text">' + esc(mom) + '</div></div>' +
+    '</div>';
+}
+
+function singleHTML(qu){
+  return (qu.revealTitle ? '<div class="reveal-title">' + esc(qu.revealTitle) + '</div>' : '') +
+    '<div class="paper single-card"><div class="tape tr"></div><div class="tape tl"></div>' +
+      '<div class="card-text">' + esc(qu.reveal.text) + '</div></div>';
+}
+
+function photoHTML(qu){
+  return (qu.revealTitle && !qu.reveal.text ? '<div class="reveal-title">' + esc(qu.revealTitle) + '</div>' : '') +
+    '<div class="photo-wrap">' + polaroidHTML(qu.image, qu.imageCaption) + '</div>';
+}
+
+/* ======================= התנהגות אחרי ציור השלב ======================= */
+let tHandle = null, sHandle = null;
+function clearTimers(){
+  if(tHandle){ clearInterval(tHandle); tHandle = null; }
+  if(sHandle){ clearInterval(sHandle); sHandle = null; }
+}
+
+function afterStage(qu, st, stages){
+  const isLast = state.stage === stages.length - 1;
+
+  if(['dual','single','photo','scoreboard'].includes(st.type)) flash();
+
+  /* --- כרטיסים כפולים: נכנסים אחד אחרי השני --- */
+  if(st.type === 'dual'){
+    app.querySelectorAll('.card').forEach(c=>{
+      const d = +c.dataset.delay || 0;
+      setTimeout(()=>{ c.classList.add('in'); tone(d ? 660 : 520, .18); }, REDUCED ? 0 : d);
+    });
+  }
+
+  /* --- הכספת במסך השאלה --- */
+  const lockBtn = document.getElementById('lockSafe');
+  if(lockBtn){
+    lockBtn.addEventListener('click', ()=>{
+      state.inputs[qu.id+'_dad'] = document.getElementById('in_dad').value.trim();
+      state.inputs[qu.id+'_mom'] = document.getElementById('in_mom').value.trim();
+      state.locked[qu.id] = true; state.unlocked[qu.id] = false;
+      tone(240,.3); save(); render();
+    });
+  }
+  const reopen = document.getElementById('reopenSafe');
+  if(reopen) reopen.addEventListener('click', ()=>{ state.locked[qu.id] = false; save(); render(); });
+
+  /* --- פתיחת הכספת --- */
+  const doUnlock = document.getElementById('doUnlock');
+  if(doUnlock){
+    if(state.unlocked[qu.id]){
+      document.getElementById('lockIco').textContent = '🔓';
+      document.getElementById('lockTxt').textContent = 'פתוח. אפשר להמשיך.';
+    }
+    doUnlock.addEventListener('click', ()=>{
+      state.unlocked[qu.id] = true; save();
+      document.getElementById('lockIco').textContent = '🔓';
+      document.getElementById('lockIco').classList.remove('open'); void document.getElementById('lockIco').offsetWidth;
+      document.getElementById('lockIco').classList.add('open');
+      document.getElementById('lockTxt').textContent = 'פתוח. אפשר להמשיך.';
+      flash(); taDa(); confetti(60);
+    });
+  }
+
+  /* --- טיימר --- */
+  if(st.type === 'countdown'){
+    const total = qu.timer, ring = document.getElementById('ring');
+    const fg = document.getElementById('ringFg'), num = document.getElementById('ringNum');
+    const C = 2 * Math.PI * 52;
+    fg.style.strokeDasharray = C; fg.style.strokeDashoffset = 0;
+    let left = total, running = false;
+    const btn = document.getElementById('startTimer');
+    const paint = ()=>{
+      num.textContent = left;
+      fg.style.strokeDashoffset = C * (1 - left/total);
+      ring.classList.toggle('warn', left <= Math.max(3, total*0.2));
+    };
+    const stop = ()=>{ clearInterval(tHandle); tHandle = null; running = false; };
+    const run = ()=>{
+      if(running) return;
+      running = true; btn.textContent = 'עצור';
+      tHandle = setInterval(()=>{
+        left--; paint();
+        if(left <= 5 && left > 0) tick();
+        if(left <= 0){
+          stop(); buzz(); flash();
+          ring.classList.add('shake');
+          num.innerHTML = '<span class="done-badge">נגמר!</span>';
+          btn.textContent = 'עוד פעם';
+          if(qu.confetti) confetti(150);
+        }
+      }, 1000);
+    };
+    btn.addEventListener('click', ()=>{
+      if(running){ stop(); btn.textContent = 'להמשיך'; return; }
+      if(left <= 0){ left = total; ring.classList.remove('shake'); paint(); }
+      run();
+    });
+    paint();
+  }
+
+  /* --- הצבעה --- */
+  if(st.type === 'vote'){
+    const k = voteKey(qu.id, st.round);
+    if(!state.closed[k]){
+      app.querySelectorAll('[data-vote]').forEach(b=>{
+        b.addEventListener('click', ()=>{
+          const i = +b.dataset.vote;
+          const c = getVotes(qu, st.round);
+          c[i]++;
+          (state.history[k] = state.history[k] || []).push(i);
+          b.querySelector('.tally').textContent = c[i];
+          b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump');
+          tone(440 + i*110, .1); save();
+        });
+      });
+      const u = document.getElementById('undoVote');
+      if(u) u.addEventListener('click', ()=>{
+        const h = state.history[k] || [];
+        if(!h.length) { buzz(); return; }
+        const i = h.pop(); const c = getVotes(qu, st.round);
+        if(c[i] > 0) c[i]--;
+        tone(300,.12); save(); render();
+      });
+      const cl = document.getElementById('clearVote');
+      if(cl) cl.addEventListener('click', ()=>{
+        state.votes[k] = (qu.votes[st.round].seed || []).slice();
+        state.history[k] = []; tone(220,.2); save(); render();
+      });
+    } else {
+      app.querySelectorAll('.bar-fill').forEach((f,i)=>{
+        setTimeout(()=>{ f.style.width = f.dataset.w + '%'; }, REDUCED ? 20 : 140 + i*140);
+      });
+      const ro = document.getElementById('reopenVote');
+      if(ro) ro.addEventListener('click', ()=>{ state.closed[k] = false; save(); render(); });
+    }
+  }
+
+  /* --- מכונת מזל --- */
+  if(st.type === 'slot'){
+    const val = document.getElementById('slotVal'), cap = document.getElementById('slotCap');
+    const opts = qu.slot.spins.slice(), answer = qu.slot.answer;
+    if(REDUCED){ val.textContent = answer; val.classList.add('landed'); cap.textContent = 'התשובה'; taDa(); }
+    else {
+      let i = 0, delay = 55, elapsed = 0;
+      cap.textContent = 'מסתובב…';
+      const spin = ()=>{
+        val.textContent = opts[i++ % opts.length];
+        tick(); elapsed += delay;
+        if(elapsed > 2600){ delay += 42; }
+        if(delay > 340){
+          val.textContent = answer; val.classList.add('landed');
+          cap.textContent = 'זאת התשובה שהם עצמם נתנו';
+          flash(); taDa(); confetti(70);
+          return;
+        }
+        sHandle = setTimeout(spin, delay);
+      };
+      sHandle = setTimeout(spin, 500);
+    }
+  }
+
+  /* --- קונפטי בסוף שאלה מסומנת --- */
+  if(isLast && qu.confetti && st.type !== 'countdown'){ confetti(200); taDa(); }
+}
+
+/* ============================ מסך סיום ============================ */
+function renderFinale(){
+  const t = tallyWins(QUESTIONS);
+  const pics = [];
+  const seen = {};
+  QUESTIONS.forEach(qu=>{ if(qu.image && !seen[qu.image]){ seen[qu.image] = 1; pics.push([qu.image, qu.imageCaption || '']); } });
+  if(!seen['assets/wedding-portrait.jpg']) pics.unshift(['assets/wedding-portrait.jpg','ירושלים, 1996']);
+
+  app.innerHTML =
+  '<div class="screen finale">' +
+    '<div class="finale-head">' + esc(FINALE.head) + '</div>' +
+    '<div class="board" style="flex:0 0 auto">' +
+      '<div class="board-col dad' + (t.dad>t.mom?' win':'') + '">' + (t.dad>t.mom?'<div class="crown">👑</div>':'') +
+        '<div class="board-name">' + esc(DAD) + '</div><div class="board-score">' + t.dad + '</div>' +
+        '<div class="board-cap">ניצחונות בהצבעות</div></div>' +
+      '<div class="board-col mom' + (t.mom>t.dad?' win':'') + '">' + (t.mom>t.dad?'<div class="crown">👑</div>':'') +
+        '<div class="board-name">' + esc(MOM) + '</div><div class="board-score">' + t.mom + '</div>' +
+        '<div class="board-cap">ניצחונות בהצבעות</div></div>' +
+    '</div>' +
+    '<div class="sync">' +
+      '<div class="sync-lab"><span>' + esc(FINALE.syncLabel) + '</span><span id="syncPct">0%</span></div>' +
+      '<div class="sync-track"><div class="sync-fill" id="syncFill"></div></div>' +
+    '</div>' +
+    '<div class="gallery">' +
+      pics.map((p,i)=> polaroidHTML(p[0], p[1], 'transform:rotate(' + (((i%5)-2)*2.4).toFixed(1) + 'deg);animation-delay:' + (0.12*i).toFixed(2) + 's')).join('') +
+    '</div>' +
+    '<div class="finale-sign">' + esc(FINALE.sign) + '</div>' +
+    '<div class="footbar">' +
+      '<button class="ghost tiny" id="prevBtn">→ חזרה לשאלה האחרונה</button>' +
+      '<div class="intro-meta" style="color:rgba(244,233,216,.5)">' + esc(FINALE.note) + '</div>' +
+      '<button class="ghost tiny" id="againBtn">מהתחלה</button>' +
+    '</div>' +
+  '</div>';
+
+  wireImages(app);
+  document.getElementById('prevBtn').addEventListener('click', prev);
+  document.getElementById('againBtn').addEventListener('click', ()=>{
+    stopConfetti(); state.screen = 'intro'; state.qi = 0; state.stage = 0; save(); render();
+  });
+
+  setTimeout(()=>{
+    const f = document.getElementById('syncFill'), p = document.getElementById('syncPct');
+    if(!f) return;
+    f.style.width = '100%';
+    let n = 0;
+    const iv = setInterval(()=>{ n += 2; if(n >= 100){ n = 100; clearInterval(iv); } if(p) p.textContent = n + '%'; }, REDUCED ? 1 : 50);
+  }, 400);
+
+  flash(); taDa(); confetti(260, true);
+}
+
+/* ============================== ניווט ============================== */
+function render(){
+  clearTimers();
+  if(state.screen === 'intro'){ stopConfetti(); renderIntro(); }
+  else if(state.screen === 'finale'){ renderFinale(); }
+  else { stopConfetti(); renderQuestion(); }
+  renderRehearse();
+  setTimeout(()=>{ const sc = app.querySelector('.screen'); if(sc) sc.classList.add('settled'); }, REDUCED ? 30 : 2200);
+  save();
+}
+
+function next(){
+  if(state.screen === 'intro'){ state.screen = 'question'; state.qi = 0; state.stage = 0; save(); render(); return; }
+  if(state.screen === 'finale') return;
+  const stages = buildStages(q());
+  if(state.stage < stages.length - 1) state.stage++;
+  else if(state.qi < QUESTIONS.length - 1){ state.qi++; state.stage = 0; }
+  else { state.screen = 'finale'; }
+  save(); render();
+}
+
+function prev(){
+  if(state.screen === 'intro') return;
+  if(state.screen === 'finale'){
+    stopConfetti();
+    state.screen = 'question'; state.qi = QUESTIONS.length - 1;
+    state.stage = buildStages(QUESTIONS[state.qi]).length - 1;
+    save(); render(); return;
+  }
+  if(state.stage > 0) state.stage--;
+  else if(state.qi > 0){ state.qi--; state.stage = 0; }
+  else { state.screen = 'intro'; }
+  save(); render();
+}
+
+function closeVote(qu, round){
+  state.closed[voteKey(qu.id, round)] = true;
+  save(); flash(); tone(392,.25); render();
+}
+
+/* מקלדת — לחזרות בבית */
+addEventListener('keydown', e=>{
+  if(e.target && ['INPUT','TEXTAREA'].includes(e.target.tagName)) return;
+  const k = e.key;
+  if(k === ' ' || k === 'Enter' || k === 'ArrowLeft' || k === 'ArrowDown'){ e.preventDefault(); next(); }
+  else if(k === 'ArrowRight' || k === 'ArrowUp'){ e.preventDefault(); prev(); }
+  else if(k === 'r' || k === 'R' || k === 'ר'){ e.preventDefault(); next(); }
+});
+
+/* החלקה */
+let tx = 0, ty = 0, tt = 0;
+app.addEventListener('touchstart', e=>{
+  if(e.touches.length !== 1) return;
+  tx = e.touches[0].clientX; ty = e.touches[0].clientY; tt = Date.now();
+}, {passive:true});
+app.addEventListener('touchend', e=>{
+  if(!tt) return;
+  const t = e.changedTouches[0];
+  const dx = t.clientX - tx, dy = t.clientY - ty, dt = Date.now() - tt;
+  tt = 0;
+  if(dt > 700 || Math.abs(dx) < 70 || Math.abs(dy) > Math.abs(dx)) return;
+  if(e.target.closest('button, input')) return;
+  if(dx < 0) next(); else prev();
+}, {passive:true});
+
+/* ======================= איפוס — לחיצה ארוכה על הלוגו ======================= */
+(function(){
+  const logo = document.getElementById('logoHit');
+  let h = null;
+  const start = ()=>{
+    h = setTimeout(()=>{
+      if(confirm('לאפס את כל הערב? כל ההצבעות והטקסטים שהוקלדו יימחקו.')){
+        try{ localStorage.removeItem(KEY); }catch(e){}
+        location.reload();
+      }
+    }, 2200);
+  };
+  const cancel = ()=>{ if(h){ clearTimeout(h); h = null; } };
+  ['mousedown','touchstart'].forEach(ev=> logo.addEventListener(ev, start, {passive:true}));
+  ['mouseup','mouseleave','touchend','touchcancel'].forEach(ev=> logo.addEventListener(ev, cancel, {passive:true}));
+})();
+
+/* ============================ מצב חזרות ============================ */
+function renderRehearse(){
+  if(!REHEARSE) return;
+  let box = document.getElementById('rehearseBox');
+  if(!box){
+    box = document.createElement('div');
+    box.id = 'rehearseBox'; box.className = 'rehearse';
+    document.body.appendChild(box);
+  }
+  const stages = state.screen === 'question' ? buildStages(q()) : [];
+  box.innerHTML = '<h5>מצב חזרות</h5><div class="grid">' +
+    QUESTIONS.map((qu,i)=> '<button data-go="' + i + '" class="' + (state.screen==='question' && i===state.qi ? 'on' : '') + '">' + qu.id + '</button>').join('') +
+    '</div>' +
+    '<button class="wide" data-scr="intro">מסך פתיחה</button>' +
+    '<button class="wide" data-scr="finale">מסך סיום</button>' +
+    (stages.length ? '<button class="wide">שלב ' + (state.stage+1) + ' מתוך ' + stages.length + ' · ' + stages[state.stage].type + '</button>' : '');
+  box.querySelectorAll('[data-go]').forEach(b=> b.addEventListener('click', ()=>{
+    state.screen = 'question'; state.qi = +b.dataset.go; state.stage = 0; save(); render();
+  }));
+  box.querySelectorAll('[data-scr]').forEach(b=> b.addEventListener('click', ()=>{
+    stopConfetti(); state.screen = b.dataset.scr; save(); render();
+  }));
+}
+
+/* ============================== הפעלה ============================== */
+load();
+render();
+['pointerdown','keydown','touchstart'].forEach(ev=>
+  addEventListener(ev, function once(){
+    keepAwake();
+    try{ if(!actx) actx = new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==='suspended') actx.resume(); }catch(e){}
+    ['pointerdown','keydown','touchstart'].forEach(e2=> removeEventListener(e2, once));
+  }, {once:false})
+);
+document.getElementById('rotateSkip').addEventListener('click', ()=>
+  document.getElementById('rotateHint').classList.add('off'));
+addEventListener('gesturestart', e=> e.preventDefault());
+addEventListener('resize', ()=> sizeCanvas());
+</script>
+
+<style>
+/* פולרואיד צף במסך הפתיחה */
+.intro-photo{position:fixed;bottom:5vh;left:4vw;width:clamp(130px,16vw,230px);z-index:11;
+  transform:rotate(-5deg);animation:floaty 7s ease-in-out infinite}
+.intro-photo .polaroid{transform:none;animation:cardIn .9s var(--ease) .3s both}
+@media (max-height:560px), (max-width:820px){ .intro-photo{display:none} }
+</style>
+</body>
+</html>
