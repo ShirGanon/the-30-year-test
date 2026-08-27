@@ -311,12 +311,14 @@ img{display:block;max-width:100%}
 .sync-fill{height:100%;width:0;border-radius:3px;transition:width 2.6s var(--ease);
   background:linear-gradient(to left,var(--tangerine),var(--gold),var(--magenta),var(--electric));
   box-shadow:0 0 40px rgba(255,201,60,.5)}
-.gallery{flex:1;min-height:0;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
-  gap:clamp(6px,1.4vw,20px);padding:clamp(4px,1.2vh,14px) 0;overflow:hidden}
-.gallery .polaroid{width:clamp(88px,11vw,152px);animation:cardIn .8s var(--ease) both;overflow:hidden}
-.gallery .polaroid .cap{font-size:clamp(.7rem,1.05vw,.95rem);padding:.45em .2em .55em}
+.gallery{flex:1;min-height:0;display:flex;flex-wrap:nowrap;align-items:flex-start;justify-content:center;
+  gap:clamp(5px,1vw,14px);padding:clamp(4px,1.2vh,14px) clamp(8px,1.6vw,22px);overflow:hidden}
+.gallery .polaroid{flex:1 1 0;min-width:0;max-width:152px;animation:cardIn .8s var(--ease) both;overflow:hidden}
+.gallery .polaroid .cap{font-size:clamp(.65rem,.95vw,.9rem);padding:.45em .2em .55em;
+  max-height:3.4em;overflow:hidden;line-height:1.25}
 .gallery .polaroid img,.gallery .missing{aspect-ratio:1/1;object-fit:cover}
-.gallery .missing{font-size:clamp(.55rem,.8vw,.75rem);gap:4px;padding:8px;overflow:hidden;line-height:1.25}
+.gallery .missing{font-size:clamp(.55rem,.8vw,.75rem);gap:4px;padding:8px;overflow:hidden;line-height:1.25;
+  min-width:0;overflow-wrap:anywhere;word-break:break-word}
 .gallery .missing span:last-child{display:none}
 .finale-sign{font-family:var(--display);text-align:center;font-size:clamp(1.4rem,4vw,3rem);color:var(--paper);
   animation:pop .8s var(--ease) both;animation-delay:.6s}
@@ -560,10 +562,11 @@ const QUESTIONS = [
   revealType: 'vote',
   votes: [
     { prompt: 'מי דומה יותר לחיים?', options: [{label:'שיר', color:'teal'}, {label:'אור', color:'gold'}], seed: [2,1] },
-    { prompt: 'מי דומה יותר לעינת?', options: [{label:'שיר', color:'teal'}, {label:'אור', color:'gold'}], seed: [1,2] }
+    { prompt: 'מי דומה יותר לעינת?', options: [{label:'שיר', color:'teal'}, {label:'אור', color:'gold'}], seed: [1,2] },
+    { prompt: 'ולמי דומה שי?', options: [{label:'אור', color:'mom'}, {label:'נדב', color:'dad'}], seed: [1,2] }
   ],
   revealTitle: 'הפסיקה של בית הדין המשפחתי',
-  reveal: { text: '[למלא: מה שתגיד כאן אחרי שתראה את הגרף]' },
+  reveal: { text: 'ובאשר לשי — אין על מה להתווכח. העיניים הכחולות האלה הן של נדב, אחת לאחת. [למלא: מה שתגיד על שיר ואור אחרי שתראה את הגרף]' },
   image: 'assets/family-now.jpg',
   imageCaption: 'הראיות',
   timer: null, confetti: true
@@ -623,6 +626,26 @@ const QUESTIONS = [
 },
 {
   id: 15, act: 3,
+  kicker: 'הדבר הכי גדול שקרה כאן לאחרונה',
+  question: 'מי מפנק יותר את שי?',
+  subtitle: 'הנכדה הראשונה. בת שנה וקצת. העיניים הכחולות של נדב.',
+  hostNote: 'חיים קנה בימבה. עינת עושה בייביסיטר. תצביעו בזהירות.',
+  revealType: 'vote',
+  votes: [
+    { prompt: 'מי מפנק יותר את שי?', options: [{label: DAD, color:'dad'}, {label: MOM, color:'mom'}], seed: [0,0] }
+  ],
+  revealTitle: 'התשובה האמיתית',
+  reveal: {
+    text: 'חיים קנה לה בימבה. עינת עושה לה בייביסיטר בלי לספור שעות. אור ונדב עייפים. ' +
+          'ואחרי 30 שנה, שני ילדים ודירה חדשה — הדבר הכי גדול שקרה כאן הוא ילדה אחת בת שנה ' +
+          'עם עיניים כחולות, שהפכה את חיים ועינת לסבא וסבתא. היא זאת שמנצחת. תמיד.'
+  },
+  image: 'assets/shai.jpg',
+  imageCaption: 'שי. הנכדה הראשונה.',
+  timer: null, confetti: true
+},
+{
+  id: 16, act: 3,
   kicker: 'ההצבעה האחרונה',
   question: 'האם ייכנס ויז׳לה חדש לדירה בבוכמן?',
   subtitle: 'כל המשפחה מצביעה. ההחלטה מחייבת. פחות או יותר.',
@@ -655,7 +678,7 @@ const FINALE = {
   head: 'לוח התוצאות של 30 שנה',
   syncLabel: 'מד הסנכרון הזוגי',
   sign: '30 שנה. אין מה להוסיף.',
-  note: 'ובכל זאת — יש לנו עוד שאלות לשנה הבאה.'
+  note: 'ואחת קטנה עם עיניים כחולות שרק התחילה לספור.'
 };
 
 /* =========================== סוף אזור העריכה =========================== */
