@@ -245,6 +245,16 @@ img{display:block;max-width:100%}
 .vote-stage{width:100%;flex:1;display:flex;flex-direction:column;min-height:0;gap:clamp(8px,1.6vh,18px)}
 .vote-prompt{font-family:var(--display);text-align:center;font-size:clamp(1.4rem,3.6vw,2.9rem);color:var(--paper)}
 .vote-hint{text-align:center;color:rgba(244,233,216,.55);font-weight:300;font-size:clamp(.9rem,1.5vw,1.15rem)}
+.vote-count{text-align:center;font-weight:800;color:var(--electric);font-size:clamp(1rem,1.8vw,1.35rem);
+  letter-spacing:.01em}
+.vote-count.full{color:var(--gold)}
+.vote-meter{display:flex;gap:clamp(6px,1vw,12px);justify-content:center;align-items:center}
+.vote-meter i{width:clamp(13px,1.7vw,21px);height:clamp(13px,1.7vw,21px);border-radius:50%;
+  border:2px solid rgba(244,233,216,.28);transition:all .35s var(--ease)}
+.vote-meter i.on{background:var(--electric);border-color:var(--electric);
+  box-shadow:0 0 16px rgba(0,229,199,.65);transform:scale(1.12)}
+.vote-btn[disabled]{opacity:.35;filter:saturate(.45)}
+.vote-btn[disabled]:active{transform:none}
 .vote-grid{flex:1;display:flex;gap:clamp(14px,2.6vw,34px);align-items:stretch;min-height:0}
 .vote-btn{flex:1;min-width:0;border-radius:4px;display:flex;flex-direction:column;align-items:center;
   justify-content:center;gap:8px;font-family:var(--display);font-size:clamp(1.6rem,4.6vw,3.6rem);
@@ -419,6 +429,11 @@ img{display:block;max-width:100%}
 
 const DAD = 'חיים';
 const MOM = 'עינת';
+
+/* מי נמצא בערב. מספר הקולות בכל סבב הצבעה מוגבל לאורך הרשימה הזאת —
+   כשכולם הצביעו, הכפתורים ננעלים ואפשר רק לסגור את ההצבעה.
+   מישהו לא הגיע? מוחקים אותו מכאן והמגבלה מתעדכנת לבד. */
+const VOTERS = ['שיר', 'אור', 'נדב', 'שי', 'עינת', 'חיים'];
 
 const QUESTIONS = [
 
@@ -924,7 +939,7 @@ function renderQuestion(){
   '<div class="screen">' +
     '<div class="qhead">' +
       '<div class="act">מערכה ' + ['','א׳','ב׳','ג׳'][qu.act] + '</div>' +
-      '<div class="act" dir="ltr" style="opacity:.5">' + QUESTIONS.length + ' / ' + qu.id + '</div>' +
+      '<div class="act" dir="ltr" style="opacity:.5">' + qu.id + ' / ' + QUESTIONS.length + '</div>' +
       '<div class="dots">' + dotsHTML() + '</div>' +
       '<div style="width:clamp(96px,11vw,150px);flex:0 0 auto"></div>' +
     '</div>' +
@@ -1023,12 +1038,21 @@ function voteHTML(qu, st){
   const colorIdx = { dad:0, mom:1, teal:2, gold:3 };
 
   if(!closed){
+    const left = Math.max(0, VOTERS.length - total);
+    const countLine = left === 0 ? 'כולם הצביעו. אפשר לסגור.'
+                    : left === 1 ? 'נותר קול אחד'
+                    : 'נותרו ' + left + ' קולות';
     return '<div class="vote-stage">' +
       '<div class="vote-prompt">' + esc(v.prompt) + '</div>' +
       '<div class="vote-hint">כל אחד לוחץ בתורו. אפשר לבטל קול אחרון.</div>' +
+      '<div class="vote-count' + (left === 0 ? ' full' : '') + '">' + countLine + '</div>' +
+      '<div class="vote-meter">' +
+        VOTERS.map((n,i)=> '<i class="' + (i < total ? 'on' : '') + '"></i>').join('') +
+      '</div>' +
       '<div class="vote-grid">' +
         v.options.map((o,i)=>
-          '<button class="vote-btn v' + (colorIdx[o.color]!==undefined?colorIdx[o.color]:i) + '" data-vote="' + i + '">' +
+          '<button class="vote-btn v' + (colorIdx[o.color]!==undefined?colorIdx[o.color]:i) + '" data-vote="' + i + '"' +
+            (left === 0 ? ' disabled' : '') + '>' +
             esc(o.label) + '<span class="tally">' + counts[i] + '</span></button>'
         ).join('') +
       '</div>' +
@@ -1211,11 +1235,26 @@ function afterStage(qu, st, stages){
         b.addEventListener('click', ()=>{
           const i = +b.dataset.vote;
           const c = getVotes(qu, st.round);
+          if(c.reduce((a,n)=>a+n,0) >= VOTERS.length){ buzz(); return; }
           c[i]++;
           (state.history[k] = state.history[k] || []).push(i);
           b.querySelector('.tally').textContent = c[i];
           b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump');
           tone(440 + i*110, .1); save();
+          const done = c.reduce((a,n)=>a+n,0);
+          const meter = app.querySelectorAll('.vote-meter i');
+          meter.forEach((d,j)=> d.classList.toggle('on', j < done));
+          const line = app.querySelector('.vote-count');
+          const left = Math.max(0, VOTERS.length - done);
+          if(line){
+            line.textContent = left === 0 ? 'כולם הצביעו. אפשר לסגור.'
+                             : left === 1 ? 'נותר קול אחד' : 'נותרו ' + left + ' קולות';
+            line.classList.toggle('full', left === 0);
+          }
+          if(left === 0){
+            app.querySelectorAll('[data-vote]').forEach(x=> x.disabled = true);
+            tone(660,.14); setTimeout(()=>tone(880,.3),130);
+          }
         });
       });
       const u = document.getElementById('undoVote');
