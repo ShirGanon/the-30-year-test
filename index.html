@@ -203,7 +203,26 @@ img{display:block;max-width:100%}
 .polaroid img{width:100%;height:auto;object-fit:cover;min-height:0;flex:1;background:#DED2BC}
 .polaroid .cap{font-family:var(--letter);font-style:italic;color:#3A3226;
   font-size:clamp(1rem,1.9vw,1.5rem);padding:.6em .2em .75em;text-align:center;flex:0 0 auto}
-.photo-wrap{width:100%;flex:1;display:flex;align-items:center;justify-content:center;min-height:0;padding:6px 0}
+/* קיר תמונות — כמה פולרואידים זה לצד זה */
+.wall{width:100%;flex:1;display:flex;align-items:center;justify-content:center;
+  gap:clamp(10px,2.2vw,34px);min-height:0;padding:4px clamp(4px,1.4vw,18px)}
+.wall .polaroid{flex:1 1 0;min-width:0;max-width:min(46vw,600px);max-height:100%;opacity:0;transform:translateY(30px)}
+.wall .polaroid.in{animation:wallIn .75s var(--ease) forwards}
+.wall .polaroid:nth-child(odd).in{animation-name:wallInL}
+.wall .polaroid img,.wall .missing{aspect-ratio:4/3;object-fit:cover;width:100%;height:auto;flex:0 0 auto}
+.wall .cap{font-size:clamp(.85rem,1.5vw,1.2rem)}
+@keyframes wallIn{to{opacity:1;transform:translateY(0) rotate(2deg)}}
+@keyframes wallInL{to{opacity:1;transform:translateY(0) rotate(-2.4deg)}}
+.settled .wall .polaroid{opacity:1 !important}
+
+/* תמונה לצד גרף ההצבעה */
+.bars-wrap{flex:1;display:flex;align-items:center;gap:clamp(12px,2.4vw,32px);min-height:0}
+.bars-photo{flex:0 0 auto;width:clamp(140px,21vw,290px);max-height:100%}
+.bars-photo .polaroid{width:100%}
+.bars-photo img,.bars-photo .missing{aspect-ratio:4/3;object-fit:cover}
+
+.photo-wrap{width:100%;flex:1;display:flex;align-items:center;justify-content:center;min-height:0;padding:2px 0 12px}
+.photo-wrap .polaroid{max-height:100%}
 .photo-wrap .polaroid{max-width:min(78vw,900px)}
 .missing{width:100%;aspect-ratio:4/3;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:10px;background:repeating-linear-gradient(45deg,#E4D8C2 0 14px,#DCCFB6 14px 28px);color:#6B5B44;
@@ -415,8 +434,11 @@ img{display:block;max-width:100%}
      revealType  'dual' | 'single' | 'photo' | 'vote' | 'countdown' | 'slot'
      revealTitle כותרת שמופיעה מעל החשיפה
      reveal      { dad: "...", mom: "...", text: "..." }
-     image       'assets/xxx.jpg'  או  null
+     image       'assets/xxx.jpg'  או  null — תמונה אחת גדולה
      imageCaption כיתוב בכתב יד מתחת לתמונה
+     images      [{src:'assets/a.jpg', cap:'כיתוב'}, ...] — קיר תמונות בסוף השאלה
+     imagesTitle כותרת מעל קיר התמונות
+     (גם לכל סבב הצבעה אפשר להוסיף image + imageCaption, והתמונה תופיע ליד הגרף)
      timer       מספר שניות (או null)
      timerRounds מערך שמות לסבבי טיימר, למשל ["חיים","עינת"]
      votes       [ { prompt:"...", options:[{label,color}], seed:[0,0] } ]
@@ -523,6 +545,11 @@ const QUESTIONS = [
   locked: true,
   revealTitle: 'הכספת נפתחת',
   reveal: { dad: '', mom: '' },
+  imagesTitle: 'התיק החקירתי',
+  images: [
+    { src: 'assets/malabi.jpg',        cap: 'תוכנית היום: מלבי' },
+    { src: 'assets/einat-kitchen.jpg', cap: 'שישי במטבח' }
+  ],
   image: null, timer: null, confetti: false
 },
 {
@@ -535,11 +562,12 @@ const QUESTIONS = [
   votes: [
     { prompt: 'מי יותר מאחר?',  options: [{label: DAD, color:'dad'}, {label: MOM, color:'mom'}], seed: [0,0] },
     { prompt: 'מי יותר עקשן?',  options: [{label: DAD, color:'dad'}, {label: MOM, color:'mom'}], seed: [0,0] },
-    { prompt: 'מי יותר נוחר?',  options: [{label: DAD, color:'dad'}, {label: MOM, color:'mom'}], seed: [0,0] },
+    { prompt: 'מי יותר נוחר?',  options: [{label: DAD, color:'dad'}, {label: MOM, color:'mom'}], seed: [0,0],
+      image: 'assets/snoring.jpg', imageCaption: '23:41. שוב.' },
     { prompt: 'מי יותר מבזבז?', options: [{label: DAD, color:'dad'}, {label: MOM, color:'mom'}], seed: [0,0] },
     { prompt: 'מי תמיד צודק?',  options: [{label: DAD, color:'dad'}, {label: MOM, color:'mom'}], seed: [0,0] }
   ],
-  image: 'assets/gymnastics.jpg',
+  image: 'assets/coach.jpg',
   imageCaption: 'המאמן, בשיא',
   timer: null, confetti: false
 },
@@ -553,6 +581,11 @@ const QUESTIONS = [
   timerRounds: [DAD, MOM],
   revealTitle: 'ומי בעצם ניצח כאן',
   reveal: { text: 'מי שהצליח להגיד יותר דברים — פשוט חשב עליהם יותר זמן. שניכם הפסדתם. תתחבקו.' },
+  imagesTitle: 'היא רוצה שקט. הוא רוצה אבק.',
+  images: [
+    { src: 'assets/einat-reading.jpg',    cap: 'שקט. היא קוראת.' },
+    { src: 'assets/haim-jeep-desert.jpg', cap: 'מדבר יהודה. מסלול אתגרי.' }
+  ],
   image: null, confetti: false
 },
 {
@@ -566,7 +599,9 @@ const QUESTIONS = [
     dad: '[למלא: השיר של חיים]',
     mom: '[למלא: השיר של עינת]'
   },
-  image: null, timer: null, confetti: false
+  image: 'assets/einat-concert.jpg',
+  imageCaption: 'טונה. שורה שלישית. היא יודעת את כל המילים.',
+  timer: null, confetti: false
 },
 {
   id: 10, act: 2,
@@ -584,6 +619,9 @@ const QUESTIONS = [
   reveal: { text: 'ובאשר לשי — אין על מה להתווכח. העיניים הכחולות האלה הן של נדב, אחת לאחת. [למלא: מה שתגיד על שיר ואור אחרי שתראה את הגרף]' },
   image: 'assets/family-now.jpg',
   imageCaption: 'הראיות',
+  images: [
+    { src: 'assets/family-walk-2.jpg', cap: 'תסתכלו טוב. מי דומה למי?' }
+  ],
   timer: null, confetti: true
 },
 
@@ -599,6 +637,11 @@ const QUESTIONS = [
     dad: '[למלא: הרגע של חיים]',
     mom: '[למלא: הרגע של עינת]'
   },
+  imagesTitle: 'ואלה הרגעים שאף אחד לא צריך לבחור',
+  images: [
+    { src: 'assets/birth-room.jpg', cap: 'חדר הלידה. היום שהכל השתנה.' },
+    { src: 'assets/family-walk.jpg', cap: 'הליכה בבוכמן. כולם, ורוקי.' }
+  ],
   image: null, timer: null, confetti: false
 },
 {
@@ -612,6 +655,11 @@ const QUESTIONS = [
     dad: '[למלא: הגרסה של חיים]',
     mom: '[למלא: הגרסה של עינת]'
   },
+  imagesTitle: 'ושניהם בטוחים שהם אלה שעובדים יותר קשה',
+  images: [
+    { src: 'assets/urban-renewal.jpg', cap: 'היא מנהלת ישיבה.' },
+    { src: 'assets/haim-office.jpg',   cap: 'הוא מנהל השקעות. מהבית.' }
+  ],
   image: null, timer: null, confetti: false
 },
 {
@@ -637,6 +685,12 @@ const QUESTIONS = [
   reveal: {
     text: 'חיים רצה גלים, חול, וג׳יפ רנגלר לבן חונה מול הים בראשון לציון. עינת רצתה שקט, הליכה בשבת אחר הצהריים, וספר. המרחק בין השניים הוא בערך 45 דקות נסיעה — ובדיוק 30 שנה של פשרות. השנה, בוכמן ניצחה. הים מחכה בסבלנות. הוא תמיד מחכה.'
   },
+  imagesTitle: 'החלום, החוזה, והפשרה',
+  images: [
+    { src: 'assets/haim-sea.jpg',    cap: 'המרפסת שהוא רוצה.' },
+    { src: 'assets/haim-garden.jpg', cap: 'הגינה שיש לו. בבוכמן.' },
+    { src: 'assets/einat-wine.jpg',  cap: 'והיא? היא הרוויחה את הכוס הזאת.' }
+  ],
   image: null, timer: null, confetti: false
 },
 {
@@ -657,6 +711,11 @@ const QUESTIONS = [
   },
   image: 'assets/shai.jpg',
   imageCaption: 'שי. הנכדה הראשונה.',
+  imagesTitle: 'הראיות מהשטח',
+  images: [
+    { src: 'assets/saba-bimba.jpg', cap: 'הבימבה. מסבא חיים. באהבה.' },
+    { src: 'assets/einat-shai.jpg', cap: 'סבתא עינת בתפקיד. שוב.' }
+  ],
   timer: null, confetti: true
 },
 {
@@ -674,6 +733,10 @@ const QUESTIONS = [
   reveal: { text: '[למלא: מה שהוחלט בפועל — או "נדבר על זה אחרי המעבר"]' },
   image: 'assets/rocky.jpg',
   imageCaption: 'רוקי. אין תחליף. אבל אפשר לנסות.',
+  imagesTitle: 'ככה זה ייראה. רק שתדעו.',
+  images: [
+    { src: 'assets/jeep-family.jpg', cap: 'כולם בג׳יפ. גם הכלב.' }
+  ],
   timer: null, confetti: true
 }
 
@@ -686,7 +749,9 @@ const INTRO = {
   title: 'שנה: המבחן',
   years: '1996–2026',
   meta: 'חיים ועינת · ירושלים ← מודיעין',
-  button: 'מתחילים'
+  button: 'מתחילים',
+  photoLeft:  { src: 'assets/wedding-portrait.jpg', cap: 'ירושלים, 1996' },
+  photoRight: { src: 'assets/family-portrait.jpg',  cap: 'והיום. כולנו.' }
 };
 
 const FINALE = {
@@ -778,7 +843,7 @@ function spawn(n){
 }
 function confettiLoop(){
   cx.clearRect(0,0,innerWidth,innerHeight);
-  if(endless && bits.length < 220) spawn(3);
+  if(endless && bits.length < 110) spawn(2);
   for(let i=bits.length-1;i>=0;i--){
     const b = bits[i];
     b.x += b.vx; b.y += b.vy; b.vy += 0.035; b.rot += b.vr;
@@ -822,6 +887,7 @@ function buildStages(qu){
   if(qu.locked || r.dad || r.mom) s.push({type:'dual'});
   if(r.text) s.push({type:'single'});
   if(qu.image && !imgInTimer) s.push({type:'photo'});
+  if(qu.images && qu.images.length) s.push({type:'wall'});
   return s;
 }
 
@@ -833,7 +899,8 @@ const CTA_LABEL = {
   unlock: 'לפתוח את הכספת',
   dual: 'לחשוף את האמת',
   single: 'לחשוף את האמת',
-  photo: 'להראות את ההוכחה'
+  photo: 'להראות את ההוכחה',
+  wall: 'להראות את התמונות'
 };
 
 function voteKey(qid, round){ return qid + '_' + round; }
@@ -908,7 +975,8 @@ function renderIntro(){
     '<div style="height:clamp(18px,4vh,44px)"></div>' +
     '<button class="cta" id="mainBtn">' + esc(INTRO.button) + '</button>' +
   '</div>' +
-  '<div class="intro-photo">' + polaroidHTML('assets/wedding-portrait.jpg', 'ירושלים, 1996') + '</div>';
+  '<div class="intro-photo">' + polaroidHTML(INTRO.photoLeft.src, INTRO.photoLeft.cap) + '</div>' +
+  '<div class="intro-photo two">' + polaroidHTML(INTRO.photoRight.src, INTRO.photoRight.cap) + '</div>';
 
   wireImages(app);
   document.getElementById('mainBtn').addEventListener('click', ()=>{
@@ -980,6 +1048,7 @@ function stageHTML(qu, st, stages){
     case 'dual':      return dualHTML(qu);
     case 'single':    return singleHTML(qu);
     case 'photo':     return photoHTML(qu);
+    case 'wall':      return wallHTML(qu);
   }
   return '';
 }
@@ -1065,6 +1134,8 @@ function voteHTML(qu, st){
   const max = Math.max(1, ...counts);
   return '<div class="vote-stage">' +
     '<div class="vote-prompt">' + esc(v.prompt) + '</div>' +
+    '<div class="bars-wrap">' +
+    (v.image ? '<div class="bars-photo">' + polaroidHTML(v.image, v.imageCaption) + '</div>' : '') +
     '<div class="bars">' +
       v.options.map((o,i)=>{
         const pct = total ? Math.round(counts[i]/total*100) : 0;
@@ -1073,6 +1144,7 @@ function voteHTML(qu, st){
           '<div class="bar-track"><div class="bar-fill f' + (colorIdx[o.color]!==undefined?colorIdx[o.color]:i) + '" data-w="' + w + '">' +
           counts[i] + (total ? ' · ' + pct + '%' : '') + '</div></div></div>';
       }).join('') +
+    '</div>' +
     '</div>' +
     '<div style="text-align:center"><button class="ghost tiny" id="reopenVote">לפתוח מחדש את ההצבעה</button></div>' +
   '</div>';
@@ -1135,6 +1207,13 @@ function singleHTML(qu){
       '<div class="card-text">' + esc(qu.reveal.text) + '</div></div>';
 }
 
+function wallHTML(qu){
+  return (qu.imagesTitle ? '<div class="reveal-title">' + esc(qu.imagesTitle) + '</div>' : '') +
+    '<div class="wall">' +
+      qu.images.map(im=> polaroidHTML(im.src, im.cap)).join('') +
+    '</div>';
+}
+
 function photoHTML(qu){
   return (qu.revealTitle && !qu.reveal.text ? '<div class="reveal-title">' + esc(qu.revealTitle) + '</div>' : '') +
     '<div class="photo-wrap">' + polaroidHTML(qu.image, qu.imageCaption) + '</div>';
@@ -1145,6 +1224,7 @@ let tHandle = null, sHandle = null;
 function clearTimers(){
   if(tHandle){ clearInterval(tHandle); tHandle = null; }
   if(sHandle){ clearInterval(sHandle); sHandle = null; }
+  if(gHandle){ clearInterval(gHandle); gHandle = null; }
 }
 
 function afterStage(qu, st, stages){
@@ -1157,6 +1237,13 @@ function afterStage(qu, st, stages){
     app.querySelectorAll('.card').forEach(c=>{
       const d = +c.dataset.delay || 0;
       setTimeout(()=>{ c.classList.add('in'); tone(d ? 660 : 520, .18); }, REDUCED ? 0 : d);
+    });
+  }
+
+  /* --- קיר תמונות: נכנסים אחד אחרי השני --- */
+  if(st.type === 'wall'){
+    app.querySelectorAll('.wall .polaroid').forEach((c,i)=>{
+      setTimeout(()=>{ c.classList.add('in'); tone(520 + i*90, .14); }, REDUCED ? 0 : 120 + i*420);
     });
   }
 
@@ -1307,13 +1394,61 @@ function afterStage(qu, st, stages){
   if(isLast && qu.confetti && st.type !== 'countdown'){ confetti(200); taDa(); }
 }
 
+/* תמונות שלא נמצאו — נבדק פעם אחת בטעינה כדי שמסך הסיום יישאר נקי */
+const MISSING = {};
+function probePictures(){
+  allPictures(true).forEach(pic=>{
+    const im = new Image();
+    im.onerror = ()=>{ MISSING[pic.src] = true; };
+    im.src = pic.src;
+  });
+}
+
+/* אוסף כל התמונות של הערב, בלי כפילויות */
+function allPictures(includeMissing){
+  const seen = {}, out = [];
+  const add = (src, cap)=>{
+    if(!src || seen[src]) return;
+    if(!includeMissing && MISSING[src]) return;
+    seen[src] = 1; out.push({src, cap: cap || ''});
+  };
+  add(INTRO.photoLeft.src, INTRO.photoLeft.cap);
+  add(INTRO.photoRight.src, INTRO.photoRight.cap);
+  QUESTIONS.forEach(qu=>{
+    add(qu.image, qu.imageCaption);
+    (qu.votes||[]).forEach(v=> add(v.image, v.imageCaption));
+    (qu.images||[]).forEach(im=> add(im.src, im.cap));
+  });
+  return out;
+}
+
+/* מסך הסיום מחליף תמונות בסבב, כדי שכולן יעברו על המסך */
+let gHandle = null;
+function rotateGallery(pics, slotCount){
+  if(REDUCED || pics.length <= slotCount) return;
+  let cursor = slotCount;
+  gHandle = setInterval(()=>{
+    const slots = app.querySelectorAll('.gallery .polaroid');
+    if(!slots.length){ clearInterval(gHandle); gHandle = null; return; }
+    const slot = slots[(Math.random()*slots.length)|0];
+    const pic = pics[cursor % pics.length]; cursor++;
+    slot.style.transition = 'opacity .45s ease';
+    slot.style.opacity = '0';
+    setTimeout(()=>{
+      slot.innerHTML = '<img src="' + esc(pic.src) + '" alt="" data-file="' + esc(pic.src) + '">' +
+                       '<div class="cap">' + esc(pic.cap || ' ') + '</div>';
+      wireImages(slot);
+      slot.style.opacity = '1';
+    }, 460);
+  }, 2600);
+}
+
 /* ============================ מסך סיום ============================ */
 function renderFinale(){
   const t = tallyWins(QUESTIONS);
-  const pics = [];
-  const seen = {};
-  QUESTIONS.forEach(qu=>{ if(qu.image && !seen[qu.image]){ seen[qu.image] = 1; pics.push([qu.image, qu.imageCaption || '']); } });
-  if(!seen['assets/wedding-portrait.jpg']) pics.unshift(['assets/wedding-portrait.jpg','ירושלים, 1996']);
+  const pics = allPictures();
+  const SLOTS = Math.min(7, pics.length);
+  const shown = pics.slice(0, SLOTS);
 
   app.innerHTML =
   '<div class="screen finale">' +
@@ -1331,7 +1466,7 @@ function renderFinale(){
       '<div class="sync-track"><div class="sync-fill" id="syncFill"></div></div>' +
     '</div>' +
     '<div class="gallery">' +
-      pics.map((p,i)=> polaroidHTML(p[0], p[1], 'transform:rotate(' + (((i%5)-2)*2.4).toFixed(1) + 'deg);animation-delay:' + (0.12*i).toFixed(2) + 's')).join('') +
+      shown.map((p,i)=> polaroidHTML(p.src, p.cap, 'transform:rotate(' + (((i%5)-2)*2.4).toFixed(1) + 'deg);animation-delay:' + (0.12*i).toFixed(2) + 's')).join('') +
     '</div>' +
     '<div class="finale-sign">' + esc(FINALE.sign) + '</div>' +
     '<div class="footbar">' +
@@ -1355,7 +1490,8 @@ function renderFinale(){
     const iv = setInterval(()=>{ n += 2; if(n >= 100){ n = 100; clearInterval(iv); } if(p) p.textContent = n + '%'; }, REDUCED ? 1 : 50);
   }, 400);
 
-  flash(); taDa(); confetti(260, true);
+  flash(); taDa(); confetti(170, true);
+  rotateGallery(pics, SLOTS);
 }
 
 /* ============================== ניווט ============================== */
@@ -1466,6 +1602,7 @@ function renderRehearse(){
 
 /* ============================== הפעלה ============================== */
 load();
+probePictures();
 render();
 ['pointerdown','keydown','touchstart'].forEach(ev=>
   addEventListener(ev, function once(){
@@ -1484,6 +1621,8 @@ addEventListener('resize', ()=> sizeCanvas());
 /* פולרואיד צף במסך הפתיחה */
 .intro-photo{position:fixed;bottom:5vh;left:4vw;width:clamp(130px,16vw,230px);z-index:11;
   transform:rotate(-5deg);animation:floaty 7s ease-in-out infinite}
+.intro-photo.two{left:auto;right:4vw;bottom:6vh;transform:rotate(4deg);animation-delay:-3.5s}
+.intro-photo.two .polaroid{animation-delay:.6s}
 .intro-photo .polaroid{transform:none;animation:cardIn .9s var(--ease) .3s both}
 @media (max-height:560px), (max-width:820px){ .intro-photo{display:none} }
 </style>
