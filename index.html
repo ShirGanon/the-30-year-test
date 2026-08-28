@@ -516,7 +516,7 @@ const VOTERS = ['שיר', 'אור', 'נדב', 'שי', 'עינת', 'חיים'];
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJK2MN7OSfwbqj8K98m5lvvwpquV9WGFvx-ZXAD_Pfe0x6e4IfOSNcFyFmGhuXnYKa/exec';
 
 /* איזו שאלה בטופס נכנסת לאיזו שאלה באתר */
-const ANSWER_MAP = { q1: 1, q2: 2, q3: 3, q5: 9, q6: 11, q7: 12 };
+const ANSWER_MAP = { q1: 1, q2: 2, q3: 3, q5: 9, q6: 13, q7: 14 };
 /* q4 (מספר החודשים) ו-q8 (מה יזמינו) מטופלים בנפרד, למטה */
 
 /* התוויות של מסך התשובות הידני */
@@ -705,9 +705,53 @@ const QUESTIONS = [
   timer: null, confetti: true
 },
 
+{
+  id: 11, act: 2,
+  kicker: 'שגרת הבוקר',
+  question: 'איך חיים פותח את הבוקר?',
+  subtitle: 'כל המשפחה מצביעה. חיים — אל תעזור להם.',
+  revealType: 'vote',
+  votes: [
+    { prompt: 'מה הדבר הראשון שהוא עושה?',
+      options: [{label:'שכיבות סמיכה', color:'dad'}, {label:'קפה', color:'mom'},
+                {label:'הליכה', color:'teal'}, {label:'מלבי', color:'gold'}],
+      seed: [0,0,0,0] }
+  ],
+  revealTitle: 'וזאת ההוכחה מהארכיון',
+  reveal: {
+    text: 'שכיבות סמיכה. על המדרכה, באמצע הרחוב, בלי שאף אחד ביקש. ' +
+          'ושימו לב לשעה שרשומה על התמונה — 18:41. כלומר זה גם לא בוקר. ' +
+          'זה פשוט קורה, מתי שבא לו.'
+  },
+  image: 'assets/pushups.jpg',
+  imageCaption: '27.3.2013, 18:41. באמצע הרחוב.',
+  timer: null, confetti: false
+},
+{
+  id: 12, act: 2,
+  kicker: 'תואר של כבוד',
+  question: 'למי חיים קורא "המלך"?',
+  subtitle: 'רק אחד בעולם זוכה לתואר הזה ממנו.',
+  revealType: 'vote',
+  votes: [
+    { prompt: 'מי המלך?',
+      options: [{label:'אלביס', color:'dad'}, {label:'עצמו', color:'mom'},
+                {label:'רוקי', color:'teal'}, {label:'הג׳יפ', color:'gold'}],
+      seed: [0,0,0,0] }
+  ],
+  revealTitle: 'אלביס. תמיד אלביס.',
+  reveal: {
+    text: 'אלביס פרסלי, ואף אחד אחר. וכשהם הגיעו לאמסטרדם, חיים לא זז מהדוכן ' +
+          'עד שהוציא מהמלך ריאיון מלא.'
+  },
+  image: 'assets/elvis.jpg',
+  imageCaption: 'אמסטרדם. הריאיון עם המלך.',
+  timer: null, confetti: false
+},
+
 /* ===================== מערכה 3 — שלושים שנה, והלאה ===================== */
 {
-  id: 11, act: 3,
+  id: 13, act: 3,
   kicker: 'הרגע האחד',
   question: 'הרגע הכי גדול של 30 השנים האלה. אחד. תבחרו.',
   subtitle: 'זה החלק שבו מותר להתרגש.',
@@ -719,14 +763,15 @@ const QUESTIONS = [
   },
   imagesTitle: 'ואלה הרגעים שאף אחד לא צריך לבחור',
   images: [
-    { src: 'assets/birth-room.jpg',      cap: 'חדר הלידה. היום שהכל השתנה.' },
-    { src: 'assets/family-walk.jpg',     cap: 'הליכה בבוכמן. כולם, ורוקי.' },
-    { src: 'assets/family-portrait.jpg', cap: 'וכולנו, ביחד.' }
+    { src: 'assets/grandparents-shai.jpg', cap: 'היום שהם הפכו לסבא וסבתא.' },
+    { src: 'assets/birth-room.jpg',        cap: 'חדר הלידה.' },
+    { src: 'assets/family-walk.jpg',       cap: 'הליכה בבוכמן. כולם, ורוקי.' },
+    { src: 'assets/family-portrait.jpg',   cap: 'וכולנו, ביחד.' }
   ],
   image: null, timer: null, confetti: false
 },
 {
-  id: 12, act: 3,
+  id: 14, act: 3,
   kicker: 'לפרוטוקול',
   question: 'מה הריב הכי מטופש שהיה לכם אי פעם?',
   subtitle: 'ואם אתם לא מסכימים על מה בדיוק היה הריב — מושלם.',
@@ -744,20 +789,33 @@ const QUESTIONS = [
   image: null, timer: null, confetti: false
 },
 {
-  id: 13, act: 3,
-  kicker: 'ארכיון',
-  question: 'התמונה הזאת — מתי צולמה, ואיפה?',
-  subtitle: '20 שניות. שנה מדויקת ומקום מדויק.',
+  id: 15, act: 3,
+  kicker: 'סבב הארכיון',
+  question: 'שלוש תמונות. איפה, מתי, ובאיזה טיול?',
+  subtitle: 'אני מראה, אתם מנחשים בקול. אחרי כל ניחוש נגלה.',
   revealType: 'photo',
-  timer: 20,
-  image: 'assets/mystery-photo.jpg',
-  imageCaption: 'מתי? איפה? ומי בכלל צילם?',
-  revealTitle: 'התשובה',
-  reveal: { text: '[למלא: שנה, מקום, ומה קרה שם באמת]' },
-  confetti: false
+  quiz: [
+    { src: 'assets/mystery-photo.jpg', cap: 'ראשונה',
+      ask: 'איפה זה? ומתי?',
+      answer: '[למלא: שנה ומקום]' },
+    { src: 'assets/airport.jpg', cap: 'שנייה',
+      ask: 'באיזה טיול צולמה התמונה הזאת?',
+      answer: 'בדרך להולנד.' },
+    { src: 'assets/pesach-2010.jpg', cap: 'שלישית',
+      ask: 'ואיפה צולמה זאת?',
+      answer: 'קיבוץ מעגן עדן. פסח 2010.',
+      answerSrc: 'assets/pesach-2010-answer.jpg',
+      answerCap: 'אותו ערב, אותה חולצה לבנה.' }
+  ],
+  imagesTitle: 'משפחה של מטיילים. תמיד היינו.',
+  images: [
+    { src: 'assets/nachal-kids.jpg', cap: 'עינת, אור ושיר. איפשהו בנחל.' },
+    { src: 'assets/desert-cave.jpg', cap: 'חיים ושיר. איפשהו במדבר.' }
+  ],
+  image: null, timer: null, confetti: false
 },
 {
-  id: 14, act: 3,
+  id: 16, act: 3,
   kicker: 'שאלת מיליון הדולר',
   question: 'מי יגור על הים בראשון לציון, ומי בשקט של בוכמן?',
   subtitle: 'הדירה החדשה נמצאת במודיעין. החלום נמצא במקום אחר.',
@@ -775,7 +833,7 @@ const QUESTIONS = [
   image: null, timer: null, confetti: false
 },
 {
-  id: 15, act: 3,
+  id: 17, act: 3,
   kicker: 'הדבר הכי גדול שקרה כאן לאחרונה',
   question: 'מי מפנק יותר את שי?',
   subtitle: 'הנכדה הראשונה. בת שנה וקצת. העיניים הכחולות של נדב.',
@@ -801,7 +859,7 @@ const QUESTIONS = [
   timer: null, confetti: true
 },
 {
-  id: 16, act: 3,
+  id: 18, act: 3,
   kicker: 'ההצבעה האחרונה',
   question: 'האם ייכנס ויז׳לה חדש לדירה בבוכמן?',
   subtitle: 'כל המשפחה מצביעה. ההחלטה מחייבת. פחות או יותר.',
@@ -1036,6 +1094,12 @@ function buildStages(qu){
     if(qu.scoreboard) s.push({type:'scoreboard'});
   }
   if(qu.revealType === 'slot' && qu.slot) s.push({type:'slot'});
+  if(qu.quiz && qu.quiz.length){
+    qu.quiz.forEach(function(item,i){
+      s.push({type:'quizAsk', round:i});
+      s.push({type:'quizAns', round:i});
+    });
+  }
   if(qu.locked) s.push({type:'unlock'});
   if(qu.locked || r.dad || r.mom) s.push({type:'dual'});
   if(r.text) s.push({type:'single'});
@@ -1053,7 +1117,9 @@ const CTA_LABEL = {
   dual: 'לחשוף את האמת',
   single: 'לחשוף את האמת',
   photo: 'להראות את ההוכחה',
-  wall: 'להראות את התמונות'
+  wall: 'להראות את התמונות',
+  quizAsk: 'לתמונה הבאה',
+  quizAns: 'לגלות'
 };
 
 function voteKey(qid, round){ return qid + '_' + round; }
@@ -1160,6 +1226,7 @@ function renderQuestion(){
   const isLastQ = state.qi === QUESTIONS.length - 1;
   let ctaLabel = nextSt ? (CTA_LABEL[nextSt.type] || 'הלאה')
                         : (isLastQ ? 'למסך הסיום' : 'לשאלה הבאה');
+  if(st.type === 'quizAsk') ctaLabel = 'לגלות';
   let ctaClass = 'cta';
   if(st.type === 'vote' && !state.closed[voteKey(qu.id, st.round)]){
     ctaLabel = 'לסגור את ההצבעה'; ctaClass = 'cta teal';
@@ -1211,6 +1278,8 @@ function stageHTML(qu, st, stages){
     case 'single':    return singleHTML(qu);
     case 'photo':     return photoHTML(qu);
     case 'wall':      return wallHTML(qu);
+    case 'quizAsk':   return quizAskHTML(qu, st);
+    case 'quizAns':   return quizAnsHTML(qu, st);
   }
   return '';
 }
@@ -1369,6 +1438,24 @@ function singleHTML(qu){
       '<div class="card-text">' + esc(qu.reveal.text) + '</div></div>';
 }
 
+/* סבב ארכיון: תמונה, ניחוש בקול, ואז התשובה */
+function quizAskHTML(qu, st){
+  var it = qu.quiz[st.round];
+  return '<div class="reveal-title">' + esc(it.ask || 'איפה ומתי?') + '</div>' +
+    '<div class="photo-wrap">' + polaroidHTML(it.src, it.cap) + '</div>';
+}
+
+function quizAnsHTML(qu, st){
+  var it = qu.quiz[st.round];
+  if(it.answerSrc){
+    return '<div class="reveal-title">' + esc(it.answer) + '</div>' +
+      '<div class="photo-wrap">' + polaroidHTML(it.answerSrc, it.answerCap) + '</div>';
+  }
+  return '<div class="reveal-title">התשובה</div>' +
+    '<div class="paper single-card"><div class="tape tr"></div><div class="tape tl"></div>' +
+      '<div class="card-text">' + esc(it.answer) + '</div></div>';
+}
+
 function wallHTML(qu){
   return (qu.imagesTitle ? '<div class="reveal-title">' + esc(qu.imagesTitle) + '</div>' : '') +
     '<div class="wall">' +
@@ -1392,7 +1479,7 @@ function clearTimers(){
 function afterStage(qu, st, stages){
   const isLast = state.stage === stages.length - 1;
 
-  if(['dual','single','photo','scoreboard'].includes(st.type)) flash();
+  if(['dual','single','photo','scoreboard','quizAns'].includes(st.type)) flash();
 
   /* --- כרטיסים כפולים: נכנסים אחד אחרי השני --- */
   if(st.type === 'dual'){
@@ -1580,6 +1667,7 @@ function allPictures(includeMissing){
     add(qu.image, qu.imageCaption);
     (qu.votes||[]).forEach(v=> add(v.image, v.imageCaption));
     (qu.images||[]).forEach(im=> add(im.src, im.cap));
+    (qu.quiz||[]).forEach(function(it){ add(it.src, it.cap); add(it.answerSrc, it.answerCap); });
   });
   return out;
 }
