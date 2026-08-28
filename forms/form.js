@@ -164,7 +164,12 @@
   function load() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } }
 
   /* ---------- שליחה ---------- */
+  /* שולחים פעם אחת, ואז שואלים את הגיליון אם התשובה באמת נחתה שם.
+     הגיליון הוא הסמכות — לא התשובה של הרשת. */
+  var sending = false;
+
   sendBtn.addEventListener('click', function () {
+    if (sending) return;
     var url = window.SCRIPT_URL || '';
     errBox.classList.remove('on');
 
@@ -173,48 +178,43 @@
       return;
     }
 
+    sending = true;
     sendBtn.disabled = true;
     sendBtn.textContent = 'שולח…';
     save();
 
+    var payload = values();
+
     fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ who: WHO, answers: values() })
+      body: JSON.stringify({ who: WHO, answers: payload })
     })
-      .then(function (r) { return r.json(); })
-      .then(function (res) {
-        if (res && res.ok) { finish(); }
-        else { throw new Error((res && res.error) || 'unknown'); }
-      })
-      .catch(function () {
-        /* יש רשתות שחוסמות קריאת תשובה. שולחים שוב בעיוורון ומוודאים בקריאה */
-        fetch(url, {
-          method: 'POST', mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ who: WHO, answers: values() })
-        })
-          .then(function () { return verify(url); })
-          .catch(function () { return verify(url); });
-      });
+      .catch(function () { /* גם אם הרשת בלעה את התשובה, בודקים בגיליון */ })
+      .then(function () { return verify(url, payload.q1); });
   });
 
-  /* מוודאים מול הגיליון שהתשובה באמת נחתה */
-  function verify(url) {
+  /* מוודאים מול הגיליון שהתשובה של האדם הזה, בגרסה הזאת, באמת נשמרה */
+  function verify(url, expected) {
     return fetch(url + '?t=' + Date.now())
       .then(function (r) { return r.json(); })
       .then(function (res) {
-        if (res && res.ok && res.answers && res.answers[WHO] && res.answers[WHO].q1) finish();
-        else throw new Error('not saved');
+        var got = res && res.ok && res.answers && res.answers[WHO];
+        if (got && String(got.q1 || '').trim() === String(expected || '').trim()) { finish(); }
+        else { throw new Error('not saved'); }
       })
       .catch(function () {
+        sending = false;
         sendBtn.disabled = false;
         sendBtn.textContent = 'לשלוח שוב';
-        showErr(g('התשובות נשמרו בטלפון, אבל השליחה לא עברה — כנראה הרשת. נסה שוב, ואם זה נתקע תראה את המסך לשיר.','התשובות נשמרו בטלפון, אבל השליחה לא עברה — כנראה הרשת. נסי שוב, ואם זה נתקע תראי את המסך לשיר.'));
+        showErr(g('התשובות נשמרו בטלפון, אבל השליחה לא עברה — כנראה הרשת. נסה שוב, ואם זה נתקע תראה את המסך לשיר.',
+                  'התשובות נשמרו בטלפון, אבל השליחה לא עברה — כנראה הרשת. נסי שוב, ואם זה נתקע תראי את המסך לשיר.'));
       });
   }
 
   function finish() {
+    sending = false;
+    sendBtn.textContent = 'נשלח ✓';
     doneBox.classList.add('on');
     document.body.style.overflow = 'hidden';
   }
@@ -228,6 +228,7 @@
   document.getElementById('again').addEventListener('click', function () {
     doneBox.classList.remove('on');
     document.body.style.overflow = '';
+    sending = false;
     sendBtn.disabled = false;
     sendBtn.textContent = 'לשלוח את התשובות';
     refresh();

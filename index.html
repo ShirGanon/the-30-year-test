@@ -513,7 +513,7 @@ const VOTERS = ['שיר', 'אור', 'נדב', 'שי', 'עינת', 'חיים'];
 /* הכתובת שקיבלת מ-Apps Script (מסתיימת ב-/exec).
    אותה כתובת בדיוק צריכה להיות גם ב-forms/config.js.
    השאר כמו שהוא אם אתה לא משתמש בטפסים — האתר עובד גם בלי. */
-const SCRIPT_URL = 'PASTE_YOUR_APPS_SCRIPT_URL_HERE';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJK2MN7OSfwbqj8K98m5lvvwpquV9WGFvx-ZXAD_Pfe0x6e4IfOSNcFyFmGhuXnYKa/exec';
 
 /* איזו שאלה בטופס נכנסת לאיזו שאלה באתר */
 const ANSWER_MAP = { q1: 1, q2: 2, q3: 3, q5: 9, q6: 11, q7: 12 };
@@ -983,10 +983,15 @@ function applyAnswers(a){
       q4.slot.answer = d + ' או ' + m + '?';
       q4.reveal.text = 'חיים אמר ' + d + ' חודשים. עינת אמרה ' + m + '. ' +
         'שלושים שנה יחד, ועדיין אין הסכמה על כמה זמן זה לקח לו להחליט.';
+    } else if(d && m){
+      q4.slot.answer = d + ' חודשים';
+      q4.reveal.text = 'שניכם אמרתם ' + d + '. מדאיג כמה אתם מתואמים.';
+    } else if(d){
+      q4.slot.answer = d + ' חודשים';
+      q4.reveal.text = 'זאת הגרסה של חיים. עינת — עכשיו תורך, בקול רם. כמה זמן זה באמת לקח לו?';
     } else {
-      var n = d || m;
-      q4.slot.answer = n + ' חודשים';
-      q4.reveal.text = 'שניכם אמרתם ' + n + '. מדאיג כמה אתם מתואמים.';
+      q4.slot.answer = m + ' חודשים';
+      q4.reveal.text = 'זאת הגרסה של עינת. חיים — עכשיו תורך, בקול רם. כמה זמן זה באמת לקח לך?';
     }
   }
 }
