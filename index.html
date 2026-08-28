@@ -31,6 +31,8 @@
   --electric:   #00E5C7;
   --gold:       #FFC93C;
   --violet:     #7B4BFF;
+  --line:       rgba(244,233,216,.16);
+  --muted:      rgba(244,233,216,.52);
 
   --display: 'Suez One', 'Arial Hebrew', 'Narkisim', 'David', serif;
   --body: 'Heebo', 'Arial Hebrew', system-ui, sans-serif;
@@ -364,6 +366,35 @@ img{display:block;max-width:100%}
 .logo-hit{position:fixed;bottom:8px;right:10px;z-index:53;font-family:var(--display);
   color:rgba(244,233,216,.2);font-size:12px;letter-spacing:.1em;padding:8px 10px}
 
+/* ---------- מסך התשובות (נפתח בלחיצה ארוכה על "בשידור חי") ---------- */
+.console{position:fixed;inset:0;z-index:85;display:none;flex-direction:column;
+  background:rgba(11,10,28,.97);padding:var(--pad);gap:14px}
+.console.on{display:flex}
+.console-head{display:flex;align-items:center;gap:14px;flex:0 0 auto;flex-wrap:wrap}
+.console-head h3{font-family:var(--display);font-size:clamp(1.1rem,2.4vw,1.6rem);
+  color:var(--paper);margin:0;flex:1;min-width:8em}
+.status{font-weight:500;font-size:clamp(.85rem,1.5vw,1.05rem);padding:8px 14px;border-radius:3px;
+  border:1px solid var(--line);color:var(--muted)}
+.status.ok{color:var(--electric);border-color:rgba(0,229,199,.5);background:rgba(0,229,199,.08)}
+.status.bad{color:var(--magenta);border-color:rgba(255,46,126,.5);background:rgba(255,46,126,.08)}
+.who-tabs{display:flex;gap:10px;flex:0 0 auto}
+.who-tabs button{min-height:56px;padding:0 24px;border-radius:3px;font-family:var(--display);
+  font-size:clamp(1rem,2vw,1.3rem);border:2px solid var(--line);color:var(--muted);
+  background:rgba(244,233,216,.04)}
+.who-tabs button.on{color:#fff}
+.who-tabs button.dad.on{background:var(--tangerine);border-color:var(--tangerine);color:#2A1200}
+.who-tabs button.mom.on{background:var(--magenta);border-color:var(--magenta)}
+.console-body{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:12px;
+  padding-left:6px}
+.cfield{display:flex;flex-direction:column;gap:5px}
+.cfield label{font-weight:800;font-size:clamp(.82rem,1.4vw,1rem);color:var(--gold)}
+.cfield textarea{font-family:var(--letter);font-size:clamp(.95rem,1.7vw,1.15rem);line-height:1.5;
+  min-height:74px;padding:11px 13px;border-radius:3px;border:2px solid rgba(244,233,216,.16);
+  background:rgba(244,233,216,.07);color:var(--paper);resize:vertical;
+  -webkit-user-select:text;user-select:text}
+.cfield textarea:focus{outline:none;border-color:var(--electric);background:rgba(244,233,216,.12)}
+.console-foot{flex:0 0 auto;display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap}
+
 /* ---------- פאנל חזרות ---------- */
 .rehearse{position:fixed;top:66px;left:12px;z-index:80;background:rgba(11,10,28,.94);
   border:2px solid var(--electric);border-radius:4px;padding:10px;max-width:230px;
@@ -421,6 +452,23 @@ img{display:block;max-width:100%}
   <svg xmlns="http://www.w3.org/2000/svg"><filter id="noiseF"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#noiseF)"/></svg>
 </div>
 <div class="logo-hit" id="logoHit">30</div>
+
+<div class="console" id="console">
+  <div class="console-head">
+    <h3>התשובות של ההורים</h3>
+    <span class="status" id="cStatus">בודק…</span>
+    <button class="ghost tiny" id="cPull">למשוך מהגיליון</button>
+    <div class="who-tabs">
+      <button class="dad on" data-who="dad">חיים</button>
+      <button class="mom" data-who="mom">עינת</button>
+    </div>
+  </div>
+  <div class="console-body" id="cBody"></div>
+  <div class="console-foot">
+    <button class="ghost tiny" id="cClose">סגור</button>
+    <button class="cta teal" id="cSave" style="min-height:64px">לשמור ולהחיל</button>
+  </div>
+</div>
 <div class="rotate-hint" id="rotateHint">סובבו את האייפד לרוחב ↻<button class="ghost" id="rotateSkip">להמשיך ככה</button></div>
 
 <script>
@@ -461,6 +509,27 @@ const MOM = 'עינת';
    כשכולם הצביעו, הכפתורים ננעלים ואפשר רק לסגור את ההצבעה.
    מישהו לא הגיע? מוחקים אותו מכאן והמגבלה מתעדכנת לבד. */
 const VOTERS = ['שיר', 'אור', 'נדב', 'שי', 'עינת', 'חיים'];
+
+/* הכתובת שקיבלת מ-Apps Script (מסתיימת ב-/exec).
+   אותה כתובת בדיוק צריכה להיות גם ב-forms/config.js.
+   השאר כמו שהוא אם אתה לא משתמש בטפסים — האתר עובד גם בלי. */
+const SCRIPT_URL = 'PASTE_YOUR_APPS_SCRIPT_URL_HERE';
+
+/* איזו שאלה בטופס נכנסת לאיזו שאלה באתר */
+const ANSWER_MAP = { q1: 1, q2: 2, q3: 3, q5: 9, q6: 11, q7: 12 };
+/* q4 (מספר החודשים) ו-q8 (מה יזמינו) מטופלים בנפרד, למטה */
+
+/* התוויות של מסך התשובות הידני */
+const ANSWER_LABELS = {
+  q1: 'איפה ראיתם אחד את השני בפעם הראשונה (שאלה 1)',
+  q2: 'המחשבה הראשונה (שאלה 2)',
+  q3: 'מי עשה את הצעד הראשון (שאלה 3)',
+  q4: 'כמה חודשים עד ההצעה — מספר (שאלה 4)',
+  q5: 'איזה שיר מזכיר לך אותו/אותה (שאלה 9)',
+  q6: 'הרגע הכי גדול (שאלה 11)',
+  q7: 'הריב הכי מטופש (שאלה 12)',
+  q8: 'מה בן/בת הזוג יזמין (שאלה 6)'
+};
 
 const QUESTIONS = [
 
@@ -544,8 +613,8 @@ const QUESTIONS = [
   id: 6, act: 2,
   kicker: 'הכרטיס הנעול',
   question: 'בלי להסתכל בתפריט: מה בן/בת הזוג יזמין הערב?',
-  subtitle: 'כל אחד לוחש לשיר. הכרטיס ננעל עד הקינוח.',
-  hostNote: 'להקליד עכשיו, בתחילת הערב. לפתוח רק כשמגיע הקינוח.',
+  subtitle: 'את הניחוש שלכם כבר כתבתם בטופס. הכרטיס ננעל עד הקינוח.',
+  hostNote: 'לפתוח רק כשמגיע הקינוח.',
   revealType: 'dual',
   locked: true,
   revealTitle: 'הכספת נפתחת',
@@ -793,7 +862,9 @@ const state = {
   inputs: {},        // "6_dad" -> "מרק כתום"
   locked: {},        // "6" -> true
   unlocked: {},      // "6" -> true
-  seen: {}           // "5" -> true (השאלות שכבר עברנו)
+  seen: {},          // "5" -> true (השאלות שכבר עברנו)
+  answers: null,     // מה שהגיע מהטפסים: {dad:{q1..q8}, mom:{...}}
+  answersAt: 0       // מתי נמשך בפעם האחרונה
 };
 
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
@@ -882,6 +953,70 @@ async function keepAwake(){
   }catch(e){ /* לא נתמך — ממשיכים בשקט */ }
 }
 document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState === 'visible') keepAwake(); });
+
+/* ======================= התשובות מהטפסים של ההורים ======================= */
+function findQ(id){ for(var i=0;i<QUESTIONS.length;i++) if(QUESTIONS[i].id===id) return QUESTIONS[i]; return null; }
+
+function applyAnswers(a){
+  if(!a) return;
+  var dad = a.dad || {}, mom = a.mom || {};
+
+  Object.keys(ANSWER_MAP).forEach(function(k){
+    var qu = findQ(ANSWER_MAP[k]);
+    if(!qu || !qu.reveal) return;
+    if(dad[k]) qu.reveal.dad = dad[k];
+    if(mom[k]) qu.reveal.mom = mom[k];
+  });
+
+  /* שאלה 6 — הכרטיס הנעול. התשובות מהטופס נכנסות לכספת וננעלות מיד. */
+  if(dad.q8 || mom.q8){
+    if(dad.q8) state.inputs['6_dad'] = dad.q8;
+    if(mom.q8) state.inputs['6_mom'] = mom.q8;
+    if(!state.unlocked[6]) state.locked[6] = true;
+  }
+
+  /* שאלה 4 — מכונת המזל. הפער בין שני המספרים הוא הבדיחה. */
+  var q4 = findQ(4);
+  if(q4 && q4.slot && (dad.q4 || mom.q4)){
+    var d = String(dad.q4 || '').trim(), m = String(mom.q4 || '').trim();
+    if(d && m && d !== m){
+      q4.slot.answer = d + ' או ' + m + '?';
+      q4.reveal.text = 'חיים אמר ' + d + ' חודשים. עינת אמרה ' + m + '. ' +
+        'שלושים שנה יחד, ועדיין אין הסכמה על כמה זמן זה לקח לו להחליט.';
+    } else {
+      var n = d || m;
+      q4.slot.answer = n + ' חודשים';
+      q4.reveal.text = 'שניכם אמרתם ' + n + '. מדאיג כמה אתם מתואמים.';
+    }
+  }
+}
+
+function answersReady(){
+  var a = state.answers;
+  return !!(a && a.dad && a.dad.q1 && a.mom && a.mom.q1);
+}
+
+function fetchAnswers(cb){
+  if(!SCRIPT_URL || SCRIPT_URL.indexOf('PASTE_') === 0){ if(cb) cb(false, 'לא הוגדרה כתובת גיליון'); return; }
+  var done = false;
+  var timer = setTimeout(function(){ if(!done){ done = true; if(cb) cb(false, 'הרשת לא ענתה'); } }, 12000);
+  fetch(SCRIPT_URL + '?t=' + Date.now())
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+      if(done) return;
+      done = true; clearTimeout(timer);
+      if(res && res.ok && res.answers){
+        state.answers = res.answers; state.answersAt = Date.now();
+        applyAnswers(state.answers); save();
+        if(cb) cb(true);
+      } else if(cb) cb(false, 'הגיליון ענה, אבל בלי תשובות');
+    })
+    .catch(function(){
+      if(done) return;
+      done = true; clearTimeout(timer);
+      if(cb) cb(false, 'לא הצלחתי להתחבר לגיליון');
+    });
+}
 
 /* ============================ מנוע השלבים ============================ */
 function q(){ return QUESTIONS[state.qi]; }
@@ -1598,6 +1733,94 @@ app.addEventListener('touchend', e=>{
   ['mouseup','mouseleave','touchend','touchcancel'].forEach(ev=> logo.addEventListener(ev, cancel, {passive:true}));
 })();
 
+/* ===================== מסך התשובות והגיבוי הידני ===================== */
+var consoleWho = 'dad';
+var consoleEl = document.getElementById('console');
+
+function consoleStatus(){
+  var el = document.getElementById('cStatus');
+  el.className = 'status';
+  if(!SCRIPT_URL || SCRIPT_URL.indexOf('PASTE_') === 0){
+    el.textContent = 'לא מחובר לגיליון — אפשר להקליד ידנית'; return;
+  }
+  if(answersReady()){
+    el.classList.add('ok');
+    el.textContent = 'שתי התשובות הגיעו' + (state.answersAt ? ' · ' + new Date(state.answersAt).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}) : '');
+  } else if(state.answers && (state.answers.dad || state.answers.mom)){
+    el.classList.add('bad');
+    el.textContent = 'הגיע רק ' + (state.answers.dad && state.answers.dad.q1 ? 'חיים' : 'עינת');
+  } else {
+    el.classList.add('bad');
+    el.textContent = 'עוד לא הגיעו תשובות';
+  }
+}
+
+function drawConsole(){
+  var body = document.getElementById('cBody');
+  var a = state.answers || {};
+  var mine = a[consoleWho] || {};
+  body.innerHTML = Object.keys(ANSWER_LABELS).map(function(k){
+    return '<div class="cfield"><label>' + esc(ANSWER_LABELS[k]) + '</label>' +
+      '<textarea data-k="' + k + '" rows="2">' + esc(mine[k] || '') + '</textarea></div>';
+  }).join('');
+  consoleEl.querySelectorAll('.who-tabs button').forEach(function(b){
+    b.classList.toggle('on', b.dataset.who === consoleWho);
+  });
+  consoleStatus();
+}
+
+function openConsole(){
+  consoleEl.classList.add('on');
+  drawConsole();
+}
+function closeConsole(){ consoleEl.classList.remove('on'); }
+
+function collectConsole(){
+  var a = state.answers || {dad:null, mom:null};
+  var mine = {};
+  consoleEl.querySelectorAll('[data-k]').forEach(function(t){
+    var v = String(t.value || '').trim();
+    if(v) mine[t.dataset.k] = v;
+  });
+  if(Object.keys(mine).length){
+    a[consoleWho] = Object.assign({}, a[consoleWho] || {}, mine);
+  }
+  state.answers = a;
+}
+
+consoleEl.querySelectorAll('.who-tabs button').forEach(function(b){
+  b.addEventListener('click', function(){
+    collectConsole();
+    consoleWho = b.dataset.who;
+    drawConsole();
+  });
+});
+document.getElementById('cClose').addEventListener('click', closeConsole);
+document.getElementById('cSave').addEventListener('click', function(){
+  collectConsole();
+  applyAnswers(state.answers);
+  save(); consoleStatus(); tone(660,.2);
+  closeConsole(); render();
+});
+document.getElementById('cPull').addEventListener('click', function(){
+  var el = document.getElementById('cStatus');
+  el.className = 'status'; el.textContent = 'מושך…';
+  fetchAnswers(function(ok, why){
+    if(ok){ drawConsole(); tone(880,.2); render(); }
+    else { el.className = 'status bad'; el.textContent = why || 'לא הצליח'; }
+  });
+});
+
+/* לחיצה ארוכה על "בשידור חי" פותחת את מסך התשובות */
+(function(){
+  var badge = document.querySelector('.onair'), h = null;
+  badge.style.pointerEvents = 'auto';
+  var start = function(){ h = setTimeout(openConsole, 1100); };
+  var cancel = function(){ if(h){ clearTimeout(h); h = null; } };
+  ['mousedown','touchstart'].forEach(function(e){ badge.addEventListener(e, start, {passive:true}); });
+  ['mouseup','mouseleave','touchend','touchcancel'].forEach(function(e){ badge.addEventListener(e, cancel, {passive:true}); });
+})();
+
 /* ============================ מצב חזרות ============================ */
 function renderRehearse(){
   if(!REHEARSE) return;
@@ -1613,6 +1836,7 @@ function renderRehearse(){
     '</div>' +
     '<button class="wide" data-scr="intro">מסך פתיחה</button>' +
     '<button class="wide" data-scr="finale">מסך סיום</button>' +
+    '<button class="wide" id="rhAnswers">תשובות ההורים</button>' +
     (stages.length ? '<button class="wide">שלב ' + (state.stage+1) + ' מתוך ' + stages.length + ' · ' + stages[state.stage].type + '</button>' : '');
   box.querySelectorAll('[data-go]').forEach(b=> b.addEventListener('click', ()=>{
     state.screen = 'question'; state.qi = +b.dataset.go; state.stage = 0; save(); render();
@@ -1620,12 +1844,16 @@ function renderRehearse(){
   box.querySelectorAll('[data-scr]').forEach(b=> b.addEventListener('click', ()=>{
     stopConfetti(); state.screen = b.dataset.scr; save(); render();
   }));
+  var ra = box.querySelector('#rhAnswers');
+  if(ra) ra.addEventListener('click', openConsole);
 }
 
 /* ============================== הפעלה ============================== */
 load();
+applyAnswers(state.answers);
 probePictures();
 render();
+fetchAnswers(function(ok){ if(ok) render(); });
 ['pointerdown','keydown','touchstart'].forEach(ev=>
   addEventListener(ev, function once(){
     keepAwake();
