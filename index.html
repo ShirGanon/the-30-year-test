@@ -205,11 +205,12 @@ img{display:block;max-width:100%}
   font-size:clamp(1rem,1.9vw,1.5rem);padding:.6em .2em .75em;text-align:center;flex:0 0 auto}
 /* קיר תמונות — כמה פולרואידים זה לצד זה */
 .wall{width:100%;flex:1;display:flex;align-items:center;justify-content:center;
-  gap:clamp(10px,2.2vw,34px);min-height:0;padding:4px clamp(4px,1.4vw,18px)}
+  gap:clamp(10px,2.2vw,34px);min-height:0;padding:4px clamp(4px,1.4vw,18px) 10px}
 .wall .polaroid{flex:1 1 0;min-width:0;max-width:min(46vw,600px);max-height:100%;opacity:0;transform:translateY(30px)}
 .wall .polaroid.in{animation:wallIn .75s var(--ease) forwards}
 .wall .polaroid:nth-child(odd).in{animation-name:wallInL}
-.wall .polaroid img,.wall .missing{aspect-ratio:4/3;object-fit:cover;width:100%;height:auto;flex:0 0 auto}
+.wall .polaroid img,.wall .missing{aspect-ratio:4/3;width:100%;height:auto;flex:0 0 auto;
+  object-fit:cover;object-position:center 30%}
 .wall .cap{font-size:clamp(.85rem,1.5vw,1.2rem)}
 @keyframes wallIn{to{opacity:1;transform:translateY(0) rotate(2deg)}}
 @keyframes wallInL{to{opacity:1;transform:translateY(0) rotate(-2.4deg)}}
@@ -222,7 +223,9 @@ img{display:block;max-width:100%}
 .bars-photo img,.bars-photo .missing{aspect-ratio:4/3;object-fit:cover}
 
 .photo-wrap{width:100%;flex:1;display:flex;align-items:center;justify-content:center;min-height:0;padding:2px 0 12px}
-.photo-wrap .polaroid{max-height:100%}
+.photo-wrap .polaroid{width:auto;max-width:min(78vw,900px);max-height:100%}
+.photo-wrap .polaroid img{flex:0 1 auto;width:auto;height:auto;max-width:100%;max-height:56dvh;object-fit:contain}
+.photo-wrap .missing{width:min(60vw,620px)}
 .photo-wrap .polaroid{max-width:min(78vw,900px)}
 .missing{width:100%;aspect-ratio:4/3;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:10px;background:repeating-linear-gradient(45deg,#E4D8C2 0 14px,#DCCFB6 14px 28px);color:#6B5B44;
@@ -244,7 +247,9 @@ img{display:block;max-width:100%}
 .timer-label{font-family:var(--display);font-size:clamp(1.2rem,3vw,2.2rem);color:var(--gold);text-align:center}
 .ring-col{display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2vh,20px);flex:0 0 auto}
 .timer-photo{flex:1 1 auto;min-width:0;min-height:0;display:flex;justify-content:center;align-items:center}
-.timer-photo .polaroid{width:100%;max-height:100%;max-width:min(52vw,760px)}
+.timer-photo .polaroid{width:auto;max-height:100%;max-width:min(52vw,760px)}
+.timer-photo .polaroid img{flex:0 1 auto;width:auto;height:auto;max-width:100%;max-height:52dvh;object-fit:contain}
+.timer-photo .missing{width:min(46vw,600px)}
 .shake{animation:shake .5s}
 .done-badge{font-family:var(--display);color:var(--magenta);font-size:clamp(1.6rem,4vw,3rem);
   animation:pop .5s var(--ease) both;text-shadow:0 0 30px rgba(255,46,126,.6)}
@@ -583,8 +588,8 @@ const QUESTIONS = [
   reveal: { text: 'מי שהצליח להגיד יותר דברים — פשוט חשב עליהם יותר זמן. שניכם הפסדתם. תתחבקו.' },
   imagesTitle: 'היא רוצה שקט. הוא רוצה אבק.',
   images: [
-    { src: 'assets/einat-reading.jpg',    cap: 'שקט. היא קוראת.' },
-    { src: 'assets/haim-jeep-desert.jpg', cap: 'מדבר יהודה. מסלול אתגרי.' }
+    { src: 'assets/einat-reading.jpg', cap: 'שקט. היא קוראת.' },
+    { src: 'assets/haim-desert.jpg',   cap: 'והוא, באמצע שום מקום. שוב.' }
   ],
   image: null, confetti: false
 },
@@ -601,6 +606,10 @@ const QUESTIONS = [
   },
   image: 'assets/einat-concert.jpg',
   imageCaption: 'טונה. שורה שלישית. היא יודעת את כל המילים.',
+  imagesTitle: 'ולו יש מערכת סטריאו משלו',
+  images: [
+    { src: 'assets/haim-jeep-desert.jpg', cap: 'הוא שומע את שלו. בג׳יפ. חזק.' }
+  ],
   timer: null, confetti: false
 },
 {
@@ -619,8 +628,10 @@ const QUESTIONS = [
   reveal: { text: 'ובאשר לשי — אין על מה להתווכח. העיניים הכחולות האלה הן של נדב, אחת לאחת. [למלא: מה שתגיד על שיר ואור אחרי שתראה את הגרף]' },
   image: 'assets/family-now.jpg',
   imageCaption: 'הראיות',
+  imagesTitle: 'תסתכלו טוב. מי דומה למי?',
   images: [
-    { src: 'assets/family-walk-2.jpg', cap: 'תסתכלו טוב. מי דומה למי?' }
+    { src: 'assets/three-generations.jpg', cap: 'שלושה דורות. אותו חיוך.' },
+    { src: 'assets/family-walk-2.jpg',     cap: 'וכולם ביחד.' }
   ],
   timer: null, confetti: true
 },
@@ -639,8 +650,9 @@ const QUESTIONS = [
   },
   imagesTitle: 'ואלה הרגעים שאף אחד לא צריך לבחור',
   images: [
-    { src: 'assets/birth-room.jpg', cap: 'חדר הלידה. היום שהכל השתנה.' },
-    { src: 'assets/family-walk.jpg', cap: 'הליכה בבוכמן. כולם, ורוקי.' }
+    { src: 'assets/birth-room.jpg',      cap: 'חדר הלידה. היום שהכל השתנה.' },
+    { src: 'assets/family-walk.jpg',     cap: 'הליכה בבוכמן. כולם, ורוקי.' },
+    { src: 'assets/family-portrait.jpg', cap: 'וכולנו, ביחד.' }
   ],
   image: null, timer: null, confetti: false
 },
@@ -670,7 +682,7 @@ const QUESTIONS = [
   revealType: 'photo',
   timer: 20,
   image: 'assets/mystery-photo.jpg',
-  imageCaption: 'מתי? איפה? מי צילם?',
+  imageCaption: 'מתי? איפה? ומי בכלל צילם?',
   revealTitle: 'התשובה',
   reveal: { text: '[למלא: שנה, מקום, ומה קרה שם באמת]' },
   confetti: false
@@ -710,11 +722,12 @@ const QUESTIONS = [
           'עם עיניים כחולות, שהפכה את חיים ועינת לסבא וסבתא. היא זאת שמנצחת. תמיד.'
   },
   image: 'assets/shai.jpg',
-  imageCaption: 'שי. הנכדה הראשונה.',
+  imageCaption: 'שי. הנכדה הראשונה. וסבא שכבר לא מוריד אותה מהידיים.',
   imagesTitle: 'הראיות מהשטח',
   images: [
+    { src: 'assets/savta-shai.jpg', cap: 'סבתא עינת בתפקיד. שוב.' },
     { src: 'assets/saba-bimba.jpg', cap: 'הבימבה. מסבא חיים. באהבה.' },
-    { src: 'assets/einat-shai.jpg', cap: 'סבתא עינת בתפקיד. שוב.' }
+    { src: 'assets/einat-shai.jpg', cap: 'ואין לזה סוף.' }
   ],
   timer: null, confetti: true
 },
@@ -751,7 +764,7 @@ const INTRO = {
   meta: 'חיים ועינת · ירושלים ← מודיעין',
   button: 'מתחילים',
   photoLeft:  { src: 'assets/wedding-portrait.jpg', cap: 'ירושלים, 1996' },
-  photoRight: { src: 'assets/family-portrait.jpg',  cap: 'והיום. כולנו.' }
+  photoRight: { src: 'assets/family-evening.jpg',   cap: 'והיום. כולנו.' }
 };
 
 const FINALE = {
@@ -945,8 +958,17 @@ function wireImages(root){
                     '<span>שימו את הקובץ בתיקיית assets</span>';
       img.replaceWith(d);
     };
+    /* מסגרת הפולרואיד מתהדקת סביב התמונה, גם כשהיא לאורך */
+    const hug = ()=>{
+      if(!img.closest('.photo-wrap, .timer-photo')) return;
+      const pol = img.closest('.polaroid');
+      if(pol && img.clientWidth > 40) pol.style.width = img.clientWidth + 'px';
+    };
+    img.addEventListener('load', ()=> setTimeout(hug, 40));
     img.addEventListener('error', fail);
-    if(img.complete && img.naturalWidth === 0) fail();
+    if(img.complete){
+      if(img.naturalWidth === 0) fail(); else setTimeout(hug, 40);
+    }
   });
 }
 function splitWords(text){
