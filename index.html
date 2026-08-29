@@ -233,6 +233,16 @@ img{display:block;max-width:100%}
   gap:10px;background:repeating-linear-gradient(45deg,#E4D8C2 0 14px,#DCCFB6 14px 28px);color:#6B5B44;
   font-weight:500;text-align:center;padding:16px;font-size:clamp(.85rem,1.4vw,1.05rem)}
 
+/* ---------- וידאו ---------- */
+.video-wrap{width:100%;flex:1;display:flex;align-items:center;justify-content:center;
+  min-height:0;padding:2px 0 12px}
+.video-wrap video{max-width:min(84vw,1000px);max-height:56dvh;border-radius:3px;background:#000;
+  box-shadow:0 30px 60px -22px rgba(0,0,0,.85), 0 0 0 10px #FCF7EE, 0 0 0 11px rgba(0,0,0,.25)}
+.video-missing{max-width:min(70vw,700px);padding:clamp(20px,4vh,40px);text-align:center;
+  display:flex;flex-direction:column;gap:10px}
+.video-missing b{font-family:var(--display);font-size:clamp(1.1rem,2.4vw,1.6rem);color:var(--ink)}
+.video-missing span{color:#6B5B44;font-size:clamp(.9rem,1.5vw,1.1rem)}
+
 /* ---------- טיימר ---------- */
 .timer-stage{width:100%;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(10px,2vh,24px);min-height:0}
 .timer-row{display:flex;align-items:center;justify-content:center;gap:clamp(18px,4vw,60px);width:100%;min-height:0;flex:1}
@@ -285,6 +295,7 @@ img{display:block;max-width:100%}
 .vote-btn{flex:1;min-width:0;border-radius:4px;display:flex;flex-direction:column;align-items:center;
   justify-content:center;gap:8px;font-family:var(--display);font-size:clamp(1.6rem,4.6vw,3.6rem);
   color:#fff;position:relative;overflow:hidden;transition:transform .12s ease;padding:10px}
+.vote-grid.four .vote-btn{font-size:clamp(1.05rem,2.6vw,2rem);line-height:1.15}
 .vote-btn:active{transform:scale(.97)}
 .vote-btn.bump{animation:bump .35s var(--ease)}
 .vote-btn .tally{direction:ltr;unicode-bidi:isolate;font-family:var(--body);font-weight:800;font-size:clamp(1rem,2vw,1.5rem);
@@ -339,6 +350,9 @@ img{display:block;max-width:100%}
 
 /* ---------- מסך סיום ---------- */
 .finale{align-items:stretch;gap:clamp(8px,1.6vh,18px)}
+.finale-line{font-family:var(--letter);font-style:italic;text-align:center;flex:0 0 auto;
+  font-size:clamp(1.05rem,2.4vw,1.6rem);color:var(--paper);max-width:34ch;margin:0 auto;
+  line-height:1.5;animation:up .7s var(--ease) .2s both}
 .finale-head{font-family:var(--display);text-align:center;font-size:clamp(1.5rem,4.4vw,3.4rem);color:var(--gold);
   text-shadow:0 0 40px rgba(255,201,60,.4);animation:up .6s var(--ease) both}
 .sync{max-width:min(1000px,92vw);margin:0 auto;width:100%}
@@ -347,7 +361,7 @@ img{display:block;max-width:100%}
 .sync-fill{height:100%;width:0;border-radius:3px;transition:width 2.6s var(--ease);
   background:linear-gradient(to left,var(--tangerine),var(--gold),var(--magenta),var(--electric));
   box-shadow:0 0 40px rgba(255,201,60,.5)}
-.gallery{flex:1;min-height:0;display:flex;flex-wrap:nowrap;align-items:flex-start;justify-content:center;
+.gallery{flex:1;min-height:0;display:flex;flex-wrap:nowrap;align-items:center;justify-content:center;
   gap:clamp(5px,1vw,14px);padding:clamp(4px,1.2vh,14px) clamp(8px,1.6vw,22px);overflow:hidden}
 .gallery .polaroid{flex:1 1 0;min-width:0;max-width:152px;animation:cardIn .8s var(--ease) both;overflow:hidden}
 .gallery .polaroid .cap{font-size:clamp(.65rem,.95vw,.9rem);padding:.45em .2em .55em;
@@ -516,19 +530,24 @@ const VOTERS = ['שיר', 'אור', 'נדב', 'שי', 'עינת', 'חיים'];
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJK2MN7OSfwbqj8K98m5lvvwpquV9WGFvx-ZXAD_Pfe0x6e4IfOSNcFyFmGhuXnYKa/exec';
 
 /* איזו שאלה בטופס נכנסת לאיזו שאלה באתר */
-const ANSWER_MAP = { q1: 1, q2: 2, q3: 3, q5: 9, q6: 13, q7: 14 };
-/* q4 (מספר החודשים) ו-q8 (מה יזמינו) מטופלים בנפרד, למטה */
+/* תמונות שלא משויכות לשאלה, ומופיעות רק בגלריית הסיום */
+const EXTRA_PICTURES = [
+  { src: 'assets/rocky.jpg', cap: 'רוקי. אין תחליף.' }
+];
+
+const ANSWER_MAP = { q1: 1, q2: 3, q3: 2, q5: 8, q6: 13, q7: 14, q8: 6 };
+/* q4 (מספר החודשים) מטופל בנפרד, למטה */
 
 /* התוויות של מסך התשובות הידני */
 const ANSWER_LABELS = {
-  q1: 'איפה ראיתם אחד את השני בפעם הראשונה (שאלה 1)',
-  q2: 'המתנה הראשונה (שאלה 2)',
-  q3: 'מי עשה את הצעד הראשון (שאלה 3)',
+  q1: 'איפה ראיתם אחד את השנייה בפעם הראשונה (שאלה 1)',
+  q2: 'המתנה הראשונה (שאלה 3)',
+  q3: 'מי עשה את הצעד הראשון (שאלה 2)',
   q4: 'כמה חודשים עד ההצעה — מספר (שאלה 4)',
-  q5: 'איזה שיר מזכיר לך אותו/אותה (שאלה 9)',
-  q6: 'הרגע הכי גדול (שאלה 11)',
-  q7: 'הריב הכי מטופש (שאלה 12)',
-  q8: 'מה בן/בת הזוג יזמין (שאלה 6)'
+  q5: 'איזה שיר מזכיר לך אותו/אותה (שאלה 8)',
+  q6: 'הרגע הכי גדול (שאלה 13)',
+  q7: 'הריב הכי מטופש (שאלה 14)',
+  q8: 'הכינויים אחד לשנייה (שאלה 6)'
 };
 
 const QUESTIONS = [
@@ -537,8 +556,8 @@ const QUESTIONS = [
 {
   id: 1, act: 1,
   kicker: 'איך הכל התחיל',
-  question: 'איפה בדיוק ראיתם אחד את השני בפעם הראשונה?',
-  subtitle: 'כל אחד עונה בנפרד. בלי להסתכל אחד על השני.',
+  question: 'איפה בדיוק ראיתם אחד את השנייה בפעם הראשונה?',
+  subtitle: 'כל אחד עונה בנפרד. בלי להסתכל אחד על השנייה.',
   hostNote: null,
   revealType: 'dual',
   revealTitle: 'שתי גרסאות. ירושלים אחת.',
@@ -550,21 +569,6 @@ const QUESTIONS = [
 },
 {
   id: 2, act: 1,
-  kicker: 'המתנה הראשונה',
-  question: 'מה הייתה המתנה הראשונה שקניתם אחד לשני?',
-  subtitle: 'מה נתתם, ומה קיבלתם. כל אחד לפי הזיכרון שלו.',
-  revealType: 'dual',
-  revealTitle: 'שתי מתנות. אולי.',
-  reveal: {
-    dad: 'הטופס של חיים לא הגיע. חיים — ספר את זה עכשיו, בקול.',
-    mom: 'הטופס של עינת לא הגיע. עינת — ספרי את זה עכשיו, בקול.'
-  },
-  image: 'assets/young-couple.jpg',
-  imageCaption: 'לפני הכל',
-  timer: null, confetti: false
-},
-{
-  id: 3, act: 1,
   kicker: 'מי התחיל',
   question: 'מי עשה את הצעד הראשון?',
   subtitle: 'קודם המשפחה מצביעה. אחר כך שומעים את שתי הגרסאות.',
@@ -579,6 +583,21 @@ const QUESTIONS = [
     mom: 'הטופס של עינת לא הגיע. עינת — ספרי את זה עכשיו, בקול.'
   },
   image: null, timer: null, confetti: false
+},
+{
+  id: 3, act: 1,
+  kicker: 'המתנה הראשונה',
+  question: 'מה הייתה המתנה הראשונה שקניתם אחד לשנייה?',
+  subtitle: 'מה נתתם, ומה קיבלתם. כל אחד לפי הזיכרון שלו.',
+  revealType: 'dual',
+  revealTitle: 'שתי מתנות. אולי.',
+  reveal: {
+    dad: 'הטופס של חיים לא הגיע. חיים — ספר את זה עכשיו, בקול.',
+    mom: 'הטופס של עינת לא הגיע. עינת — ספרי את זה עכשיו, בקול.'
+  },
+  image: 'assets/young-couple.jpg',
+  imageCaption: 'לפני הכל',
+  timer: null, confetti: false
 },
 {
   id: 4, act: 1,
@@ -611,19 +630,15 @@ const QUESTIONS = [
 /* ============ מערכה 2 — כמה אתם באמת מכירים אחד את השני ============ */
 {
   id: 6, act: 2,
-  kicker: 'הכרטיס הנעול',
-  question: 'בלי להסתכל בתפריט: מה בן/בת הזוג יזמין הערב?',
-  subtitle: 'את הניחוש שלכם כבר כתבתם בטופס. הכרטיס ננעל עד הקינוח.',
-  hostNote: 'לפתוח רק כשמגיע הקינוח.',
+  kicker: 'שם קוד',
+  question: 'איך אתם קוראים אחד לשנייה?',
+  subtitle: 'הכינויים לאורך השנים — ואיזה מהם הכי אהוב עליכם.',
   revealType: 'dual',
-  locked: true,
-  revealTitle: 'הכספת נפתחת',
-  reveal: { dad: '', mom: '' },
-  imagesTitle: 'התיק החקירתי',
-  images: [
-    { src: 'assets/malabi.jpg',        cap: 'תוכנית היום: מלבי' },
-    { src: 'assets/einat-kitchen.jpg', cap: 'שישי במטבח' }
-  ],
+  revealTitle: 'שלושים שנה של שמות',
+  reveal: {
+    dad: 'הטופס של חיים לא הגיע. חיים — ספר את זה עכשיו, בקול.',
+    mom: 'הטופס של עינת לא הגיע. עינת — ספרי את זה עכשיו, בקול.'
+  },
   image: null, timer: null, confetti: false
 },
 {
@@ -647,23 +662,6 @@ const QUESTIONS = [
 },
 {
   id: 8, act: 2,
-  kicker: 'רשימת התלונות',
-  question: '15 שניות למנות את מה שהכי מעצבן אצל השני. מוכנים?',
-  subtitle: 'המשפחה סופרת. מי שאמר יותר — מפסיד. ככה זה עובד.',
-  revealType: 'countdown',
-  timer: 15,
-  timerRounds: [DAD, MOM],
-  revealTitle: 'ומי בעצם ניצח כאן',
-  reveal: { text: 'מי שהצליח להגיד יותר דברים — פשוט חשב עליהם יותר זמן. שניכם הפסדתם. תתחבקו.' },
-  imagesTitle: 'היא רוצה שקט. הוא רוצה אבק.',
-  images: [
-    { src: 'assets/einat-reading.jpg', cap: 'שקט. היא קוראת.' },
-    { src: 'assets/haim-desert.jpg',   cap: 'והוא, באמצע שום מקום. שוב.' }
-  ],
-  image: null, confetti: false
-},
-{
-  id: 9, act: 2,
   kicker: 'פסקול',
   question: 'איזה שיר מזכיר לך אותו? ואותה?',
   subtitle: 'שיר מנגן את זה מהטלפון ברגע החשיפה.',
@@ -682,7 +680,7 @@ const QUESTIONS = [
   timer: null, confetti: false
 },
 {
-  id: 10, act: 2,
+  id: 9, act: 2,
   kicker: 'תורשה',
   question: 'איזה ילד דומה יותר לכל אחד מכם — שיר או אור?',
   subtitle: 'קודם אתם עונים בקול. אחר כך נראה מה המשפחה חושבת באמת.',
@@ -706,8 +704,8 @@ const QUESTIONS = [
 },
 
 {
-  id: 11, act: 2,
-  kicker: 'שגרת הבוקר',
+  id: 10, act: 2,
+  kicker: 'הבוקר שלו',
   question: 'איך חיים פותח את הבוקר?',
   subtitle: 'כל המשפחה מצביעה. חיים — אל תעזור להם.',
   revealType: 'vote',
@@ -725,6 +723,37 @@ const QUESTIONS = [
   },
   image: 'assets/pushups.jpg',
   imageCaption: '27.3.2013, 18:41. באמצע הרחוב.',
+  imagesTitle: 'ואם הוא לא עושה שכיבות סמיכה, אז',
+  images: [
+    { src: 'assets/malabi.jpg', cap: 'תוכנית היום: מלבי.' }
+  ],
+  timer: null, confetti: false
+},
+{
+  id: 11, act: 2,
+  kicker: 'הבוקר שלה',
+  question: 'ומה הדבר הראשון שעינת עושה כל בוקר?',
+  subtitle: 'אותו משחק, הצד השני של המיטה. היא קמה בשבע.',
+  revealType: 'vote',
+  votes: [
+    { prompt: 'מה הדבר הראשון שהיא עושה?',
+      options: [{label:'וידאו עם שי', color:'mom'}, {label:'אתר הריסה', color:'dad'},
+                {label:'קפה', color:'teal'}, {label:'מקלחת', color:'gold'}],
+      seed: [0,0,0,0] }
+  ],
+  revealTitle: 'ושתי התשובות נכונות',
+  reveal: {
+    text: 'גם וגם. שיחת וידאו עם שי, ואתר הריסה. עינת קמה בשבע, ועד שרוב האנשים ' +
+          'בכלל פוקחים עיניים היא כבר דיברה עם הנכדה וגם הספיקה להיות בשטח.'
+  },
+  image: 'assets/demolition-site.jpg',
+  imageCaption: 'אתר ההריסה. שבע בבוקר.',
+  video: { src: 'assets/shai-video.mp4', title: 'ושי, ברגע שהיא רואה את סבתא' },
+  imagesTitle: 'ואחר כך היום פשוט ממשיך',
+  images: [
+    { src: 'assets/einat-kitchen.jpg', cap: 'שישי במטבח.' },
+    { src: 'assets/einat-reading.jpg', cap: 'ובערב — שקט. היא קוראת.' }
+  ],
   timer: null, confetti: false
 },
 {
@@ -809,8 +838,10 @@ const QUESTIONS = [
   ],
   imagesTitle: 'משפחה של מטיילים. תמיד היינו.',
   images: [
-    { src: 'assets/nachal-kids.jpg', cap: 'עינת, אור ושיר. איפשהו בנחל.' },
-    { src: 'assets/desert-cave.jpg', cap: 'חיים ושיר. איפשהו במדבר.' }
+    { src: 'assets/nachal-kids.jpg',      cap: 'עינת, אור ושיר. איפשהו בנחל.' },
+    { src: 'assets/desert-cave.jpg',      cap: 'חיים ושיר. איפשהו במדבר.' },
+    { src: 'assets/haim-desert.jpg',      cap: 'והוא, באמצע שום מקום.' },
+    { src: 'assets/jeep-family.jpg',      cap: 'וכולם בג׳יפ. גם הכלב.' }
   ],
   image: null, timer: null, confetti: false
 },
@@ -858,27 +889,7 @@ const QUESTIONS = [
   ],
   timer: null, confetti: true
 },
-{
-  id: 18, act: 3,
-  kicker: 'ההצבעה האחרונה',
-  question: 'האם ייכנס ויז׳לה חדש לדירה בבוכמן?',
-  subtitle: 'כל המשפחה מצביעה. ההחלטה מחייבת. פחות או יותר.',
-  hostNote: 'רוקי מסתכל עלינו מלמעלה. תצביעו בהתאם.',
-  revealType: 'vote',
-  votes: [
-    { prompt: 'ויז׳לה חדש בבוכמן — כן או לא?',
-      options: [{label:'כן', color:'teal'}, {label:'בשום אופן לא', color:'mom'}], seed: [0,0] }
-  ],
-  revealTitle: 'הפסיקה',
-  reveal: { text: '[למלא: מה שהוחלט בפועל — או "נדבר על זה אחרי המעבר"]' },
-  image: 'assets/rocky.jpg',
-  imageCaption: 'רוקי. אין תחליף. אבל אפשר לנסות.',
-  imagesTitle: 'ככה זה ייראה. רק שתדעו.',
-  images: [
-    { src: 'assets/jeep-family.jpg', cap: 'כולם בג׳יפ. גם הכלב.' }
-  ],
-  timer: null, confetti: true
-}
+
 
 ];
 
@@ -895,7 +906,8 @@ const INTRO = {
 };
 
 const FINALE = {
-  head: 'לוח התוצאות של 30 שנה',
+  head: 'שלושים שנה, בתמונות',
+  line: 'אין כאן מנצחים. יש שניים שבחרו אחד בשנייה, ועשו את זה שוב כל בוקר, שלושים שנה.',
   syncLabel: 'מד הסנכרון הזוגי',
   sign: '30 שנה. אין מה להוסיף.',
   note: 'ואחת קטנה עם עיניים כחולות שרק התחילה לספור.'
@@ -1026,13 +1038,6 @@ function applyAnswers(a){
     if(mom[k]) qu.reveal.mom = mom[k];
   });
 
-  /* שאלה 6 — הכרטיס הנעול. התשובות מהטופס נכנסות לכספת וננעלות מיד. */
-  if(dad.q8 || mom.q8){
-    if(dad.q8) state.inputs['6_dad'] = dad.q8;
-    if(mom.q8) state.inputs['6_mom'] = mom.q8;
-    if(!state.unlocked[6]) state.locked[6] = true;
-  }
-
   /* שאלה 4 — מכונת המזל. הפער בין שני המספרים הוא הבדיחה. */
   var q4 = findQ(4);
   if(q4 && q4.slot && (dad.q4 || mom.q4)){
@@ -1104,6 +1109,7 @@ function buildStages(qu){
   if(qu.locked || r.dad || r.mom) s.push({type:'dual'});
   if(r.text) s.push({type:'single'});
   if(qu.image && !imgInTimer) s.push({type:'photo'});
+  if(qu.video && qu.video.src) s.push({type:'video'});
   if(qu.images && qu.images.length) s.push({type:'wall'});
   return s;
 }
@@ -1118,6 +1124,7 @@ const CTA_LABEL = {
   single: 'לחשוף את האמת',
   photo: 'להראות את ההוכחה',
   wall: 'להראות את התמונות',
+  video: 'להריץ את הסרטון',
   quizAsk: 'לתמונה הבאה',
   quizAns: 'לגלות'
 };
@@ -1278,6 +1285,7 @@ function stageHTML(qu, st, stages){
     case 'single':    return singleHTML(qu);
     case 'photo':     return photoHTML(qu);
     case 'wall':      return wallHTML(qu);
+    case 'video':     return videoHTML(qu);
     case 'quizAsk':   return quizAskHTML(qu, st);
     case 'quizAns':   return quizAnsHTML(qu, st);
   }
@@ -1349,7 +1357,7 @@ function voteHTML(qu, st){
       '<div class="vote-meter">' +
         VOTERS.map((n,i)=> '<i class="' + (i < total ? 'on' : '') + '"></i>').join('') +
       '</div>' +
-      '<div class="vote-grid">' +
+      '<div class="vote-grid' + (v.options.length > 3 ? ' four' : '') + '">' +
         v.options.map((o,i)=>
           '<button class="vote-btn v' + (colorIdx[o.color]!==undefined?colorIdx[o.color]:i) + '" data-vote="' + i + '"' +
             (left === 0 ? ' disabled' : '') + '>' +
@@ -1438,6 +1446,14 @@ function singleHTML(qu){
       '<div class="card-text">' + esc(qu.reveal.text) + '</div></div>';
 }
 
+function videoHTML(qu){
+  var v = qu.video;
+  return (v.title ? '<div class="reveal-title">' + esc(v.title) + '</div>' : '') +
+    '<div class="video-wrap">' +
+      '<video id="theVideo" controls playsinline preload="metadata" src="' + esc(v.src) + '"></video>' +
+    '</div>';
+}
+
 /* סבב ארכיון: תמונה, ניחוש בקול, ואז התשובה */
 function quizAskHTML(qu, st){
   var it = qu.quiz[st.round];
@@ -1470,7 +1486,13 @@ function photoHTML(qu){
 
 /* ======================= התנהגות אחרי ציור השלב ======================= */
 let tHandle = null, sHandle = null;
+function stopVideo(){
+  var v = document.getElementById('theVideo');
+  if(v && !v.paused){ try{ v.pause(); }catch(e){} }
+}
+
 function clearTimers(){
+  stopVideo();
   if(tHandle){ clearInterval(tHandle); tHandle = null; }
   if(sHandle){ clearInterval(sHandle); sHandle = null; }
   if(gHandle){ clearInterval(gHandle); gHandle = null; }
@@ -1487,6 +1509,21 @@ function afterStage(qu, st, stages){
       const d = +c.dataset.delay || 0;
       setTimeout(()=>{ c.classList.add('in'); tone(d ? 660 : 520, .18); }, REDUCED ? 0 : d);
     });
+  }
+
+  /* --- וידאו --- */
+  if(st.type === 'video'){
+    var vid = document.getElementById('theVideo');
+    if(vid){
+      vid.addEventListener('error', function(){
+        var d = document.createElement('div');
+        d.className = 'paper video-missing';
+        d.innerHTML = '<b>הסרטון עוד לא כאן</b>' +
+          '<span>' + esc(qu.video.src) + '</span>' +
+          '<span>שימו את הקובץ בתיקייה, והוא יעלה מעצמו.</span>';
+        vid.replaceWith(d);
+      });
+    }
   }
 
   /* --- קיר תמונות: נכנסים אחד אחרי השני --- */
@@ -1663,6 +1700,7 @@ function allPictures(includeMissing){
   };
   add(INTRO.photoLeft.src, INTRO.photoLeft.cap);
   add(INTRO.photoRight.src, INTRO.photoRight.cap);
+  (typeof EXTRA_PICTURES !== 'undefined' ? EXTRA_PICTURES : []).forEach(function(x){ add(x.src, x.cap); });
   QUESTIONS.forEach(qu=>{
     add(qu.image, qu.imageCaption);
     (qu.votes||[]).forEach(v=> add(v.image, v.imageCaption));
@@ -1695,7 +1733,6 @@ function rotateGallery(pics, slotCount){
 
 /* ============================ מסך סיום ============================ */
 function renderFinale(){
-  const t = tallyWins(QUESTIONS);
   const pics = allPictures();
   const SLOTS = Math.min(7, pics.length);
   const shown = pics.slice(0, SLOTS);
@@ -1703,14 +1740,7 @@ function renderFinale(){
   app.innerHTML =
   '<div class="screen finale">' +
     '<div class="finale-head">' + esc(FINALE.head) + '</div>' +
-    '<div class="board" style="flex:0 0 auto">' +
-      '<div class="board-col dad' + (t.dad>t.mom?' win':'') + '">' + (t.dad>t.mom?'<div class="crown">👑</div>':'') +
-        '<div class="board-name">' + esc(DAD) + '</div><div class="board-score">' + t.dad + '</div>' +
-        '<div class="board-cap">ניצחונות בהצבעות</div></div>' +
-      '<div class="board-col mom' + (t.mom>t.dad?' win':'') + '">' + (t.mom>t.dad?'<div class="crown">👑</div>':'') +
-        '<div class="board-name">' + esc(MOM) + '</div><div class="board-score">' + t.mom + '</div>' +
-        '<div class="board-cap">ניצחונות בהצבעות</div></div>' +
-    '</div>' +
+    '<div class="finale-line">' + esc(FINALE.line) + '</div>' +
     '<div class="sync">' +
       '<div class="sync-lab"><span>' + esc(FINALE.syncLabel) + '</span><span id="syncPct">0%</span></div>' +
       '<div class="sync-track"><div class="sync-fill" id="syncFill"></div></div>' +
