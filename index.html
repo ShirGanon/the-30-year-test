@@ -241,6 +241,8 @@ img{display:block;max-width:100%}
 .video-missing{max-width:min(70vw,700px);padding:clamp(20px,4vh,40px);text-align:center;
   display:flex;flex-direction:column;gap:10px}
 .video-missing b{font-family:var(--display);font-size:clamp(1.1rem,2.4vw,1.6rem);color:var(--ink)}
+.video-hint{text-align:center;color:var(--gold);font-weight:500;font-size:clamp(.9rem,1.6vw,1.15rem);
+  min-height:1.4em;flex:0 0 auto}
 .video-missing span{color:#6B5B44;font-size:clamp(.9rem,1.5vw,1.1rem)}
 
 /* ---------- טיימר ---------- */
@@ -1450,8 +1452,10 @@ function videoHTML(qu){
   var v = qu.video;
   return (v.title ? '<div class="reveal-title">' + esc(v.title) + '</div>' : '') +
     '<div class="video-wrap">' +
-      '<video id="theVideo" controls playsinline preload="metadata" src="' + esc(v.src) + '"></video>' +
-    '</div>';
+      '<video id="theVideo" controls loop autoplay playsinline preload="auto" ' +
+             'src="' + esc(v.src) + '"></video>' +
+    '</div>' +
+    '<div class="video-hint" id="videoHint"></div>';
 }
 
 /* סבב ארכיון: תמונה, ניחוש בקול, ואז התשובה */
@@ -1511,10 +1515,24 @@ function afterStage(qu, st, stages){
     });
   }
 
-  /* --- וידאו --- */
+  /* --- וידאו: מתנגן לבד ובלולאה, כי הקטע קצר --- */
   if(st.type === 'video'){
     var vid = document.getElementById('theVideo');
+    var hint = document.getElementById('videoHint');
     if(vid){
+      /* מנסים עם קול. אם הדפדפן חוסם — מריצים בהשתקה ומזמינים להקיש */
+      vid.muted = false;
+      var pr = vid.play();
+      if(pr && pr.catch){
+        pr.catch(function(){
+          vid.muted = true;
+          vid.play().catch(function(){});
+          if(hint) hint.textContent = 'הקישו על הסרטון כדי לשמוע';
+        });
+      }
+      vid.addEventListener('volumechange', function(){
+        if(!vid.muted && hint) hint.textContent = '';
+      });
       vid.addEventListener('error', function(){
         var d = document.createElement('div');
         d.className = 'paper video-missing';
