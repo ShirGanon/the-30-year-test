@@ -628,7 +628,10 @@ const QUESTIONS = [
   timer: 45,
   video: { src: 'assets/wedding-video.mp4' },
   revealTitle: 'סוף הזמן',
-  reveal: { text: '[למלא: מי זוהה, מי נשכח, ומי ייעלב מזה עד פסח]' },
+  reveal: {
+    text: 'נגמר הזמן. אז מי זוהה, מי נשכח, ומי ייעלב מזה עד פסח? ' +
+          'תעברו על זה עכשיו בקול — ותנו קרדיט למי שהציל את הסיבוב.'
+  },
   confetti: true
 },
 
@@ -696,8 +699,12 @@ const QUESTIONS = [
     { prompt: 'מי דומה יותר לעינת?', options: [{label:'שיר', color:'teal'}, {label:'אור', color:'gold'}], seed: [1,2] },
     { prompt: 'ולמי דומה שי?', options: [{label:'אור', color:'mom'}, {label:'נדב', color:'dad'}], seed: [1,2] }
   ],
-  revealTitle: 'הפסיקה של בית הדין המשפחתי',
-  reveal: { text: 'ובאשר לשי — אין על מה להתווכח. העיניים הכחולות האלה הן של נדב, אחת לאחת. [למלא: מה שתגיד על שיר ואור אחרי שתראה את הגרף]' },
+  revealTitle: 'והמשפחה אמרה את שלה. עכשיו אתם.',
+  reveal: {
+    text: 'עכשיו תורכם — ולא מספיק להגיד מי. תסבירו למה. ' +
+          'מה בדיוק בשיר מזכיר לכם אחד מכם, מה באור, ומה בשי. ' +
+          'כל אחד עונה בנפרד, ואם אתם לא מסכימים — מצוין.'
+  },
   image: 'assets/family-now.jpg',
   imageCaption: 'הראיות',
   imagesTitle: 'תסתכלו טוב. מי דומה למי?',
@@ -831,7 +838,7 @@ const QUESTIONS = [
   quiz: [
     { src: 'assets/mystery-photo.jpg', cap: 'ראשונה',
       ask: 'איפה זה? ומתי?',
-      answer: '[למלא: שנה ומקום]' },
+      answer: 'ויאטנם.' },
     { src: 'assets/airport.jpg', cap: 'שנייה',
       ask: 'באיזה טיול צולמה התמונה הזאת?',
       answer: 'בדרך להולנד.' },
