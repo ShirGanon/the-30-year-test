@@ -378,6 +378,25 @@ img{display:block;max-width:100%}
 .finale-sign{font-family:var(--display);text-align:center;font-size:clamp(1.4rem,4vw,3rem);color:var(--paper);
   animation:pop .8s var(--ease) both;animation-delay:.6s}
 
+/* ---------- מציג התמונות של מסך הסיום ---------- */
+.gallery .polaroid{cursor:pointer}
+.viewer{position:fixed;inset:0;z-index:95;display:none;flex-direction:column;
+  background:var(--ink-deep);padding:var(--pad);gap:clamp(8px,1.6vh,16px)}
+.viewer.on{display:flex}
+.viewer-top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex:0 0 auto}
+.viewer-count{font-family:var(--display);color:var(--gold);font-size:clamp(1rem,2vw,1.4rem);
+  direction:ltr;unicode-bidi:isolate}
+.viewer-stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative}
+.viewer-stage img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
+  border-radius:2px;box-shadow:0 30px 70px -24px rgba(0,0,0,.9), 0 0 0 8px #FCF7EE}
+.viewer-cap{flex:0 0 auto;text-align:center;font-family:var(--letter);font-style:italic;
+  color:var(--paper);font-size:clamp(1rem,2vw,1.4rem);min-height:1.5em}
+.viewer-foot{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.viewer-arrow{min-width:96px;min-height:72px;border-radius:3px;font-size:2rem;
+  border:2px solid rgba(244,233,216,.28);color:var(--paper);background:rgba(244,233,216,.06)}
+.viewer-arrow:active{background:rgba(244,233,216,.18)}
+.viewer-arrow[disabled]{opacity:.25}
+
 /* ---------- הבזק ומעברים ---------- */
 .flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:70}
 .flash.go{animation:flash .42s ease-out}
@@ -471,6 +490,19 @@ img{display:block;max-width:100%}
   <svg xmlns="http://www.w3.org/2000/svg"><filter id="noiseF"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#noiseF)"/></svg>
 </div>
 <div class="logo-hit" id="logoHit">30</div>
+
+<div class="viewer" id="viewer">
+  <div class="viewer-top">
+    <button class="ghost tiny" id="vClose">סגור</button>
+    <span class="viewer-count" id="vCount"></span>
+  </div>
+  <div class="viewer-stage"><img id="vImg" alt=""></div>
+  <div class="viewer-cap" id="vCap"></div>
+  <div class="viewer-foot">
+    <button class="viewer-arrow" id="vNext">←</button>
+    <button class="viewer-arrow" id="vPrev">→</button>
+  </div>
+</div>
 
 <div class="console" id="console">
   <div class="console-head">
@@ -1793,14 +1825,25 @@ function renderFinale(){
       shown.map((p,i)=> polaroidHTML(p.src, p.cap, 'transform:rotate(' + (((i%5)-2)*2.4).toFixed(1) + 'deg);animation-delay:' + (0.12*i).toFixed(2) + 's')).join('') +
     '</div>' +
     '<div class="finale-sign">' + esc(FINALE.sign) + '</div>' +
+    '<div class="intro-meta" style="color:rgba(244,233,216,.5);text-align:center">' + esc(FINALE.note) + '</div>' +
     '<div class="footbar">' +
       '<button class="ghost tiny" id="prevBtn">→ חזרה לשאלה האחרונה</button>' +
-      '<div class="intro-meta" style="color:rgba(244,233,216,.5)">' + esc(FINALE.note) + '</div>' +
+      '<button class="cta teal" id="browseBtn" style="min-height:64px;font-size:clamp(1rem,2vw,1.4rem)">לדפדף בכל התמונות</button>' +
       '<button class="ghost tiny" id="againBtn">מהתחלה</button>' +
     '</div>' +
   '</div>';
 
   wireImages(app);
+  document.getElementById('browseBtn').addEventListener('click', ()=> openViewer(0));
+  app.querySelectorAll('.gallery .polaroid').forEach(function(pol, i){
+    pol.addEventListener('click', function(){
+      var img = pol.querySelector('img');
+      var src = img && img.getAttribute('data-file');
+      var idx = 0;
+      if(src) allPictures().forEach(function(p, n){ if(p.src === src) idx = n; });
+      openViewer(idx);
+    });
+  });
   document.getElementById('prevBtn').addEventListener('click', prev);
   document.getElementById('againBtn').addEventListener('click', ()=>{
     stopConfetti(); state.screen = 'intro'; state.qi = 0; state.stage = 0; save(); render();
@@ -1818,9 +1861,68 @@ function renderFinale(){
   rotateGallery(pics, SLOTS);
 }
 
+/* ===================== דפדוף בכל התמונות של הערב ===================== */
+var viewerPics = [], viewerAt = 0, viewerWasRotating = false;
+var viewerEl = document.getElementById('viewer');
+
+function openViewer(i){
+  viewerPics = allPictures();
+  if(!viewerPics.length) return;
+  viewerAt = Math.max(0, Math.min(i || 0, viewerPics.length - 1));
+  viewerWasRotating = !!gHandle;
+  if(gHandle){ clearInterval(gHandle); gHandle = null; }
+  viewerEl.classList.add('on');
+  drawViewer();
+}
+
+function closeViewer(){
+  viewerEl.classList.remove('on');
+  if(viewerWasRotating && state.screen === 'finale'){
+    rotateGallery(allPictures(), Math.min(7, allPictures().length));
+  }
+  viewerWasRotating = false;
+}
+
+function drawViewer(){
+  var pic = viewerPics[viewerAt];
+  if(!pic) return;
+  document.getElementById('vImg').src = pic.src;
+  document.getElementById('vCap').textContent = pic.cap || '';
+  document.getElementById('vCount').textContent = (viewerAt + 1) + ' / ' + viewerPics.length;
+  document.getElementById('vPrev').disabled = viewerAt === 0;
+  document.getElementById('vNext').disabled = viewerAt === viewerPics.length - 1;
+}
+
+function viewerGo(d){
+  var n = viewerAt + d;
+  if(n < 0 || n >= viewerPics.length) return;
+  viewerAt = n; drawViewer(); tone(520 + (d > 0 ? 80 : 0), .07);
+}
+
+document.getElementById('vClose').addEventListener('click', closeViewer);
+document.getElementById('vPrev').addEventListener('click', function(){ viewerGo(-1); });
+document.getElementById('vNext').addEventListener('click', function(){ viewerGo(1); });
+
+/* החלקה בתוך המציג */
+(function(){
+  var sx = 0, st = 0;
+  viewerEl.addEventListener('touchstart', function(e){
+    if(e.touches.length !== 1) return;
+    sx = e.touches[0].clientX; st = Date.now();
+  }, {passive:true});
+  viewerEl.addEventListener('touchend', function(e){
+    if(!st) return;
+    var dx = e.changedTouches[0].clientX - sx, dt = Date.now() - st;
+    st = 0;
+    if(dt > 700 || Math.abs(dx) < 60) return;
+    viewerGo(dx < 0 ? 1 : -1);
+  }, {passive:true});
+})();
+
 /* ============================== ניווט ============================== */
 function render(){
   clearTimers();
+  if(viewerEl.classList.contains('on')){ viewerEl.classList.remove('on'); viewerWasRotating = false; }
   if(state.screen === 'intro'){ stopConfetti(); renderIntro(); }
   else if(state.screen === 'finale'){ renderFinale(); }
   else { stopConfetti(); renderQuestion(); }
@@ -1862,6 +1964,13 @@ function closeVote(qu, round){
 addEventListener('keydown', e=>{
   if(e.target && ['INPUT','TEXTAREA'].includes(e.target.tagName)) return;
   const k = e.key;
+  if(viewerEl.classList.contains('on')){
+    e.preventDefault();
+    if(k === 'Escape') closeViewer();
+    else if(k === 'ArrowLeft') viewerGo(1);
+    else if(k === 'ArrowRight') viewerGo(-1);
+    return;
+  }
   if(k === ' ' || k === 'Enter' || k === 'ArrowLeft' || k === 'ArrowDown'){ e.preventDefault(); next(); }
   else if(k === 'ArrowRight' || k === 'ArrowUp'){ e.preventDefault(); prev(); }
   else if(k === 'r' || k === 'R' || k === 'ר'){ e.preventDefault(); next(); }
