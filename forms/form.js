@@ -15,17 +15,17 @@
 
   /* --- השאלות. min = מינימום תווים כדי שזה ייחשב תשובה ולא מלמול --- */
   var QS = [
-    { id:'q1', min:110, type:'text',
+    { id:'q1', min:2, type:'text',
       label:'איפה בדיוק ראית את ' + YOU + ' בפעם הראשונה?',
       hint:g('המקום, מי היה שם, מה לבשת אם אתה זוכר. תספר את זה כמו שהיית מספר לחבר.',
              'המקום, מי היה שם, מה לבשת אם את זוכרת. תספרי את זה כמו שהיית מספרת לחברה.'),
       ph:'זה היה ב…' },
-    { id:'q2', min:90, type:'text',
+    { id:'q2', min:2, type:'text',
       label:'מה הייתה המתנה הראשונה שקניתם אחד לשנייה?',
       hint:g('מה קנית לה, ומה היא קנתה לך. ואם אתה זוכר גם באיזה אירוע — עוד יותר טוב.',
              'מה קנית לו, ומה הוא קנה לך. ואם את זוכרת גם באיזה אירוע — עוד יותר טוב.'),
       ph:g('קניתי לה…', 'קניתי לו…') },
-    { id:'q3', min:60, type:'text',
+    { id:'q3', min:2, type:'text',
       label:'מי עשה את הצעד הראשון?',
       hint:'ולא רק מי — גם איך. בדיוק מה קרה.',
       ph:'זה היה…' },
@@ -34,20 +34,20 @@
       hint:g('מספר. בלי להתייעץ, בלי לבדוק ביומן. מה שאתה זוכר.',
              'מספר. בלי להתייעץ, בלי לבדוק ביומן. מה שאת זוכרת.'),
       ph:'' },
-    { id:'q5', min:55, type:'text',
+    { id:'q5', min:2, type:'text',
       label:'איזה שיר מזכיר לך ' + HIM + '?',
       hint:'שם השיר, ולמה דווקא הוא.',
       ph:'השיר הוא… ובגלל ש…' },
-    { id:'q6', min:130, type:'text',
+    { id:'q6', min:2, type:'text',
       label:'הרגע הכי גדול של 30 השנים האלה. אחד.',
       hint:g('רק אחד. תבחר, ותספר למה דווקא הוא זה שנשאר.',
              'רק אחד. תבחרי, ותספרי למה דווקא הוא זה שנשאר.'),
       ph:'הרגע הוא…' },
-    { id:'q7', min:120, type:'text',
+    { id:'q7', min:2, type:'text',
       label:'מה הריב הכי מטופש שהיה לכם אי פעם?',
       hint:'על מה בדיוק רבתם, ומי צדק. לפי הגרסה שלך.',
       ph:'רבנו על…' },
-    { id:'q8', min:70, type:'text',
+    { id:'q8', min:2, type:'text',
       label:'איך אתם קוראים אחד לשנייה?',
       hint:g('הכינויים לאורך השנים — ואיזה מהם הכי אהוב עליך.',
              'הכינויים לאורך השנים — ואיזה מהם הכי אהוב עלייך.'),
@@ -107,25 +107,24 @@
       return;
     }
 
-    var need = q.min;
-    var have = v.length;
-    var pct = Math.min(100, Math.round(have / need * 100));
+    var need = q.min;                       /* מינימום מילים */
+    var have = words(v);
     var ok2 = have >= need;
     el.classList.toggle('ok', ok2);
-    bar.style.width = pct + '%';
+    bar.style.width = Math.min(100, Math.round(have / need * 100)) + '%';
 
     if (ok2) {
       txt.textContent = 'מספיק. אפשר גם יותר.';
     } else if (have === 0) {
       txt.textContent = 'עוד לא נכתב כלום';
-    } else if (pct > 65) {
-      txt.textContent = 'כמעט. עוד משפט.';
-    } else if (pct > 25) {
-      txt.textContent = 'תמשיך, זה מעניין';
     } else {
-      txt.textContent = 'קצר מדי — תספר קצת יותר';
+      txt.textContent = (need - have) === 1 ? 'עוד מילה אחת' : 'עוד ' + (need - have) + ' מילים';
     }
     refresh();
+  }
+
+  function words(v) {
+    return String(v || '').trim().split(/\s+/).filter(Boolean).length;
   }
 
   function values() {
@@ -145,7 +144,7 @@
       if (q.type === 'number') {
         var num = parseInt(v, 10);
         if (!isNaN(num) && num > 0 && num <= 600) n++;
-      } else if (v.length >= q.min) n++;
+      } else if (words(v) >= q.min) n++;
     });
     return n;
   }
