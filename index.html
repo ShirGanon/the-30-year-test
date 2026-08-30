@@ -260,6 +260,9 @@ img{display:block;max-width:100%}
   font-family:var(--display);font-size:clamp(3.4rem,9vh,6.5rem);color:var(--paper)}
 .timer-label{font-family:var(--display);font-size:clamp(1.2rem,3vw,2.2rem);color:var(--gold);text-align:center}
 .ring-col{display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2vh,20px);flex:0 0 auto}
+.timer-video{flex:1 1 auto;min-width:0;min-height:0;display:flex;justify-content:center;align-items:center}
+.timer-video video{max-width:100%;max-height:56dvh;border-radius:3px;background:#000;
+  box-shadow:0 26px 54px -20px rgba(0,0,0,.85), 0 0 0 9px #FCF7EE, 0 0 0 10px rgba(0,0,0,.25)}
 .timer-photo{flex:1 1 auto;min-width:0;min-height:0;display:flex;justify-content:center;align-items:center}
 .timer-photo .polaroid{width:auto;max-height:100%;max-width:min(52vw,760px)}
 .timer-photo .polaroid img{flex:0 1 auto;width:auto;height:auto;max-width:100%;max-height:52dvh;object-fit:contain}
@@ -619,12 +622,11 @@ const QUESTIONS = [
 {
   id: 5, act: 1,
   kicker: 'מבחן הזיכרון',
-  question: 'תמונת החתונה. 45 שניות לזהות כמה שיותר אנשים ברקע.',
-  subtitle: 'המשפחה סופרת בקול. חיים ועינת נגד השעון.',
+  question: 'סרטון מהחתונה. 45 שניות לזהות כמה שיותר אנשים.',
+  subtitle: 'הסרטון מתחיל עם השעון. תצעקו שמות.',
   revealType: 'countdown',
   timer: 45,
-  image: 'assets/wedding-crowd.jpg',
-  imageCaption: 'ירושלים, 1996',
+  video: { src: 'assets/wedding-video.mp4' },
   revealTitle: 'סוף הזמן',
   reveal: { text: '[למלא: מי זוהה, מי נשכח, ומי ייעלב מזה עד פסח]' },
   confetti: true
@@ -1096,6 +1098,7 @@ function buildStages(qu){
   const s = [{type:'ask'}];
   const r = qu.reveal || {};
   const imgInTimer = !!(qu.timer && qu.image);
+  const vidInTimer = !!(qu.timer && qu.video && qu.video.src);
   if(qu.timer){ (qu.timerRounds || [null]).forEach((label,i)=> s.push({type:'countdown', round:i, label})); }
   if(qu.votes && qu.votes.length){
     qu.votes.forEach((v,i)=> s.push({type:'vote', round:i}));
@@ -1112,7 +1115,7 @@ function buildStages(qu){
   if(qu.locked || r.dad || r.mom) s.push({type:'dual'});
   if(r.text) s.push({type:'single'});
   if(qu.image && !imgInTimer) s.push({type:'photo'});
-  if(qu.video && qu.video.src) s.push({type:'video'});
+  if(qu.video && qu.video.src && !vidInTimer) s.push({type:'video'});
   if(qu.images && qu.images.length) s.push({type:'wall'});
   return s;
 }
@@ -1328,7 +1331,10 @@ function countdownHTML(qu, st){
   return '<div class="timer-stage">' +
     (label ? '<div class="timer-label">' + esc(label) + '</div>' : '') +
     '<div class="timer-row">' +
-      (qu.image ? '<div class="timer-photo">' + polaroidHTML(qu.image, qu.imageCaption) + '</div>' : '') +
+      (qu.video && qu.video.src
+        ? '<div class="timer-video"><video id="theVideo" controls playsinline preload="auto" ' +
+          'src="' + esc(qu.video.src) + '"></video></div>'
+        : qu.image ? '<div class="timer-photo">' + polaroidHTML(qu.image, qu.imageCaption) + '</div>' : '') +
       '<div class="ring-col">' +
         '<div class="ring" id="ring">' +
           '<svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"></circle>' +
@@ -1595,10 +1601,19 @@ function afterStage(qu, st, stages){
       fg.style.strokeDashoffset = C * (1 - left/total);
       ring.classList.toggle('warn', left <= Math.max(3, total*0.2));
     };
-    const stop = ()=>{ clearInterval(tHandle); tHandle = null; running = false; };
+    const clip = document.getElementById('theVideo');
+    const stop = ()=>{
+      clearInterval(tHandle); tHandle = null; running = false;
+      if(clip){ try{ clip.pause(); }catch(e){} }
+    };
     const run = ()=>{
       if(running) return;
       running = true; btn.textContent = 'עצור';
+      if(clip){
+        clip.muted = false;
+        var cp = clip.play();
+        if(cp && cp.catch) cp.catch(function(){ clip.muted = true; clip.play().catch(function(){}); });
+      }
       tHandle = setInterval(()=>{
         left--; paint();
         if(left <= 5 && left > 0) tick();
@@ -1613,7 +1628,10 @@ function afterStage(qu, st, stages){
     };
     btn.addEventListener('click', ()=>{
       if(running){ stop(); btn.textContent = 'להמשיך'; return; }
-      if(left <= 0){ left = total; ring.classList.remove('shake'); paint(); }
+      if(left <= 0){
+        left = total; ring.classList.remove('shake'); paint();
+        if(clip){ try{ clip.currentTime = 0; }catch(e){} }
+      }
       run();
     });
     paint();
