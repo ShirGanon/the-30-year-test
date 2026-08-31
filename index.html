@@ -610,7 +610,6 @@ const QUESTIONS = [
   kicker: 'מי התחיל',
   question: 'מי עשה את הצעד הראשון?',
   subtitle: 'קודם המשפחה מצביעה. אחר כך שומעים את שתי הגרסאות.',
-  hostNote: 'שימו לב שהוא כבר מתחיל להתגונן.',
   revealType: 'vote',
   votes: [
     { prompt: 'מי עשה את הצעד הראשון?', options: [{label: DAD, color:'dad'}, {label: MOM, color:'mom'}], seed: [0,0] }
@@ -854,7 +853,7 @@ const QUESTIONS = [
     dad: 'הטופס של חיים לא הגיע. חיים — ספר את זה עכשיו, בקול.',
     mom: 'הטופס של עינת לא הגיע. עינת — ספרי את זה עכשיו, בקול.'
   },
-  imagesTitle: 'ושניהם בטוחים שהם אלה שעובדים יותר קשה',
+  imagesTitle: 'שני אנשים שכל אחד בנה את שלו — ודאג שגם לשני יהיה מקום',
   images: [
     { src: 'assets/urban-renewal.jpg', cap: 'היא מנהלת ישיבה.' },
     { src: 'assets/haim-office.jpg',   cap: 'הוא מנהל השקעות. מהבית.' }
@@ -1530,8 +1529,7 @@ function wallHTML(qu){
 }
 
 function photoHTML(qu){
-  return (qu.revealTitle && !qu.reveal.text ? '<div class="reveal-title">' + esc(qu.revealTitle) + '</div>' : '') +
-    '<div class="photo-wrap">' + polaroidHTML(qu.image, qu.imageCaption) + '</div>';
+  return '<div class="photo-wrap">' + polaroidHTML(qu.image, qu.imageCaption) + '</div>';
 }
 
 /* ======================= התנהגות אחרי ציור השלב ======================= */
